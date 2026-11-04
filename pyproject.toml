@@ -70,3 +70,5 @@ ignore = ["S101"]  # assert is expected in tests
 "scripts/*" = ["S311"]  # non-crypto randomness is fine for synthetic fixtures
 # Fake credentials are the point of these tests: they prove a token cannot leak.
 "tests/*" = ["S105", "S106"]
+# Typer's whole API is function calls in argument defaults; B008 cannot apply here.
+"src/jiralens/cli.py" = ["B008"]

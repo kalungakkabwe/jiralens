@@ -20,6 +20,14 @@ All notable changes to this project are documented here. Format follows
   - `stale` — no recorded activity beyond the stale threshold
   - `high_priority_stale` — configurable priority names, tighter threshold
   - `status_age` — days in the current status, from the latest changelog transition
+- **Phase 3** — `run_scan` orchestration: the single entry point every interface calls.
+  Validates config, fetches issues through `IssueSource`, retrieves status histories,
+  enriches `current_status_since`, runs the registered checks, sorts findings and
+  returns a `ScanResult`. Emits `ScanProgress` stages so an interface can show progress
+  without holding any audit logic.
+- `jiralens demo` now runs a real end-to-end audit of the synthetic dataset and prints
+  the overview, per-check counts, top findings and scope caveats. The renderer is shared
+  with the live `scan` command arriving in Phase 7.
 
 ### Decisions pinned by tests
 
@@ -31,10 +39,17 @@ All notable changes to this project are documented here. Format follows
   transitioned, so a freshly created issue is never flagged.
 - No check flags a Done issue, under any combination of inputs.
 - No check mutates the issues it is given, and repeated runs are identical.
-- `status_age` sets `requires_changelog`, so `--no-changelog` will record it in
-  `ScanResult.skipped_checks` rather than reporting zero findings.
+- `status_age` sets `requires_changelog`, so `--no-changelog` records it in
+  `ScanResult.skipped_checks` rather than reporting zero findings — and
+  `findings_by_check` omits a skipped check entirely rather than showing it as `0`.
+- A failed changelog fetch degrades to a warning plus a skipped check instead of
+  aborting the scan: a partial audit that names what is missing beats no audit.
+- The latest status transition is found by timestamp, never by list position, because
+  a paginated history is exactly where that assumption fails silently.
+- Every scan states the permission caveat, so no report implies more coverage than the
+  authenticated account actually has.
 
 ### Not yet implemented
 
-- Phase 3 scan orchestration, Phase 4 reports, Phase 5 CLI scan, Phase 6/7 live Jira
-  client, Phase 8 Streamlit dashboard.
+- Phase 4 reports, Phase 5 CLI exports, Phase 6/7 live Jira client, Phase 8 Streamlit
+  dashboard.

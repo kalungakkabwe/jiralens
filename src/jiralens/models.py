@@ -213,6 +213,7 @@ class ScanResult(BaseModel):
     warnings: list[str] = Field(default_factory=list)
     skipped_checks: list[str] = Field(default_factory=list)
     source_name: str = "unknown"
+    duration_seconds: float = Field(default=0.0, ge=0)
 
     @field_validator("started_at", "completed_at")
     @classmethod

@@ -29,15 +29,28 @@ Jira sites rename these freely.
 
 ## Build status
 
-This repository is being built in phases. Phases 0 and 1 are complete:
+This repository is being built in phases. Phases 0 to 3 are complete, so the full
+audit engine runs end to end against synthetic data today:
 
 - **Phase 0** — packaging, validated configuration, exception hierarchy, logging with
   credential redaction, CI.
 - **Phase 1** — typed domain models with an injected clock, the Jira issue normaliser,
   the `IssueSource` protocol, and a synthetic dataset of 61 issues covering every
   audit condition plus the known boundary cases.
-- **Phases 2–8** — check engine, scan orchestration, CSV/HTML/JSON reports, CLI,
-  read-only Jira client, Streamlit dashboard. See `CHANGELOG.md`.
+- **Phase 2** — the five checks behind an `AuditCheck` protocol with a central registry.
+- **Phase 3** — `run_scan` orchestration returning a complete `ScanResult`, with
+  progress stages and honest handling of missing status history.
+- **Phases 4–8** — CSV/HTML/JSON reports, CLI exports, the read-only Jira client, and
+  the Streamlit dashboard. See `CHANGELOG.md`.
+
+```
+$ jiralens demo --exclude-status "Waiting for Customer" --top 5
+Scan 20261104-DEMO-180540
+  Issues scanned             60
+  Findings                   77   (20 high, 57 warning)
+  Issues with findings       50
+  Issues with no findings    10
+```
 
 ## Quick start
 
