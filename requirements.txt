@@ -1,0 +1,3 @@
+# Streamlit Community Cloud installs from requirements.txt, not pyproject.toml.
+# Keep this file as the single line below so deps stay defined in pyproject.
+-e .

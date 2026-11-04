@@ -1,0 +1,2083 @@
+{
+  "issues": [
+    {
+      "id": "10001",
+      "key": "DEMO-1",
+      "_intent": "healthy",
+      "fields": {
+        "summary": "Rotate service account credentials",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede21g",
+          "displayName": "K. Mwale",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-20d",
+        "updated": "@-2d",
+        "duedate": "@+14d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10002",
+      "key": "DEMO-2",
+      "_intent": "healthy",
+      "fields": {
+        "summary": "Document the release checklist",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede22h",
+          "displayName": "T. Banda",
+          "active": true
+        },
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-12d",
+        "updated": "@-1d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10003",
+      "key": "DEMO-3",
+      "_intent": "healthy",
+      "fields": {
+        "summary": "Add index to audit log table",
+        "issuetype": {
+          "name": "Story"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede23i",
+          "displayName": "N. Phiri",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-18d",
+        "updated": "@-3d",
+        "duedate": "@+21d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10004",
+      "key": "DEMO-4",
+      "_intent": "healthy",
+      "fields": {
+        "summary": "Upgrade CI runner image",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Review",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Review"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede24j",
+          "displayName": "S. Zulu",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-9d",
+        "updated": "@-1d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10005",
+      "key": "DEMO-5",
+      "_intent": "healthy",
+      "fields": {
+        "summary": "Write runbook for cache eviction",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede21g",
+          "displayName": "K. Mwale",
+          "active": true
+        },
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-7d",
+        "updated": "@-2d",
+        "duedate": "@+30d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10006",
+      "key": "DEMO-6",
+      "_intent": "healthy",
+      "fields": {
+        "summary": "Refactor notification dispatcher",
+        "issuetype": {
+          "name": "Story"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede22h",
+          "displayName": "T. Banda",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-25d",
+        "updated": "@-4d",
+        "duedate": "@+10d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10007",
+      "key": "DEMO-7",
+      "_intent": "healthy",
+      "fields": {
+        "summary": "Add retry to webhook consumer",
+        "issuetype": {
+          "name": "Bug"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Review",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Review"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede23i",
+          "displayName": "N. Phiri",
+          "active": true
+        },
+        "priority": {
+          "name": "High"
+        },
+        "created": "@-6d",
+        "updated": "@-1d",
+        "duedate": "@+5d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10008",
+      "key": "DEMO-8",
+      "_intent": "healthy",
+      "fields": {
+        "summary": "Tidy up deprecated feature flags",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede24j",
+          "displayName": "S. Zulu",
+          "active": true
+        },
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-14d",
+        "updated": "@-5d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10009",
+      "key": "DEMO-9",
+      "_intent": "healthy",
+      "fields": {
+        "summary": "Review storage growth forecast",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede21g",
+          "displayName": "K. Mwale",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-11d",
+        "updated": "@-2d",
+        "duedate": "@+18d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10010",
+      "key": "DEMO-10",
+      "_intent": "healthy",
+      "fields": {
+        "summary": "Patch dependency advisory GHSA-xxxx",
+        "issuetype": {
+          "name": "Bug"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Review",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Review"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede22h",
+          "displayName": "T. Banda",
+          "active": true
+        },
+        "priority": {
+          "name": "High"
+        },
+        "created": "@-4d",
+        "updated": "@0d",
+        "duedate": "@+3d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10011",
+      "key": "DEMO-11",
+      "_intent": "unassigned",
+      "fields": {
+        "summary": "Renew customer reporting certificate",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": null,
+        "priority": {
+          "name": "High"
+        },
+        "created": "@-95d",
+        "updated": "@-3d",
+        "duedate": "@+9d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10012",
+      "key": "DEMO-12",
+      "_intent": "unassigned",
+      "fields": {
+        "summary": "Triage inbound integration errors",
+        "issuetype": {
+          "name": "Bug"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": null,
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-10d",
+        "updated": "@-1d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10013",
+      "key": "DEMO-13",
+      "_intent": "unassigned",
+      "fields": {
+        "summary": "Decommission legacy SFTP drop",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": null,
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-22d",
+        "updated": "@-4d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10014",
+      "key": "DEMO-14",
+      "_intent": "unassigned",
+      "fields": {
+        "summary": "Review orphaned permission scheme",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": null,
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-16d",
+        "updated": "@-2d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10015",
+      "key": "DEMO-15",
+      "_intent": "unassigned",
+      "fields": {
+        "summary": "Clarify SLA wording for tier 2",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": null,
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-8d",
+        "updated": "@-1d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10016",
+      "key": "DEMO-16",
+      "_intent": "unassigned",
+      "fields": {
+        "summary": "Confirm backup retention policy",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": null,
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-13d",
+        "updated": "@-5d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10017",
+      "key": "DEMO-17",
+      "_intent": "unassigned",
+      "fields": {
+        "summary": "Audit unused automation rules",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": null,
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-19d",
+        "updated": "@-3d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10018",
+      "key": "DEMO-18",
+      "_intent": "unassigned+highprio",
+      "fields": {
+        "summary": "Investigate duplicate asset records",
+        "issuetype": {
+          "name": "Bug"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": null,
+        "priority": {
+          "name": "High"
+        },
+        "created": "@-5d",
+        "updated": "@-1d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10019",
+      "key": "DEMO-19",
+      "_intent": "overdue+high",
+      "fields": {
+        "summary": "Submit quarterly access review",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede23i",
+          "displayName": "N. Phiri",
+          "active": true
+        },
+        "priority": {
+          "name": "Highest"
+        },
+        "created": "@-60d",
+        "updated": "@-2d",
+        "duedate": "@-12d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10020",
+      "key": "DEMO-20",
+      "_intent": "overdue+high",
+      "fields": {
+        "summary": "Close out vendor security questionnaire",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede24j",
+          "displayName": "S. Zulu",
+          "active": true
+        },
+        "priority": {
+          "name": "High"
+        },
+        "created": "@-50d",
+        "updated": "@-3d",
+        "duedate": "@-8d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10021",
+      "key": "DEMO-21",
+      "_intent": "overdue",
+      "fields": {
+        "summary": "Deliver capacity plan to finance",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede21g",
+          "displayName": "K. Mwale",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-40d",
+        "updated": "@-4d",
+        "duedate": "@-20d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10022",
+      "key": "DEMO-22",
+      "_intent": "overdue",
+      "fields": {
+        "summary": "Migrate reports off deprecated view",
+        "issuetype": {
+          "name": "Story"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Review",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Review"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede22h",
+          "displayName": "T. Banda",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-70d",
+        "updated": "@-5d",
+        "duedate": "@-31d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10023",
+      "key": "DEMO-23",
+      "_intent": "overdue+high+unassigned",
+      "fields": {
+        "summary": "Replace expiring API integration token",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": null,
+        "priority": {
+          "name": "Highest"
+        },
+        "created": "@-33d",
+        "updated": "@-6d",
+        "duedate": "@-2d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10024",
+      "key": "DEMO-24",
+      "_intent": "overdue",
+      "fields": {
+        "summary": "Archive FY24 project spaces",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede23i",
+          "displayName": "N. Phiri",
+          "active": true
+        },
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-80d",
+        "updated": "@-9d",
+        "duedate": "@-45d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10025",
+      "key": "DEMO-25",
+      "_intent": "overdue+high",
+      "fields": {
+        "summary": "Finalise DR test evidence pack",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "Blocked",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "Blocked"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede24j",
+          "displayName": "S. Zulu",
+          "active": true
+        },
+        "priority": {
+          "name": "High"
+        },
+        "created": "@-55d",
+        "updated": "@-7d",
+        "duedate": "@-5d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10026",
+      "key": "DEMO-26",
+      "_intent": "overdue",
+      "fields": {
+        "summary": "Update data processing register",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede21g",
+          "displayName": "K. Mwale",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-29d",
+        "updated": "@-8d",
+        "duedate": "@-1d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10027",
+      "key": "DEMO-27",
+      "_intent": "stale",
+      "fields": {
+        "summary": "Update onboarding runbook",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede22h",
+          "displayName": "T. Banda",
+          "active": true
+        },
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-120d",
+        "updated": "@-46d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10028",
+      "key": "DEMO-28",
+      "_intent": "stale",
+      "fields": {
+        "summary": "Consolidate duplicate dashboards",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede23i",
+          "displayName": "N. Phiri",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-140d",
+        "updated": "@-61d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10029",
+      "key": "DEMO-29",
+      "_intent": "stale",
+      "fields": {
+        "summary": "Review third-party app permissions",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede24j",
+          "displayName": "S. Zulu",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-110d",
+        "updated": "@-52d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10030",
+      "key": "DEMO-30",
+      "_intent": "stale",
+      "fields": {
+        "summary": "Clean up test automation fixtures",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede21g",
+          "displayName": "K. Mwale",
+          "active": true
+        },
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-99d",
+        "updated": "@-38d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10031",
+      "key": "DEMO-31",
+      "_intent": "stale",
+      "fields": {
+        "summary": "Retire the old status page",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede22h",
+          "displayName": "T. Banda",
+          "active": true
+        },
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-130d",
+        "updated": "@-77d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10032",
+      "key": "DEMO-32",
+      "_intent": "stale",
+      "fields": {
+        "summary": "Document incident severity matrix",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Review",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Review"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede23i",
+          "displayName": "N. Phiri",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-105d",
+        "updated": "@-44d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10033",
+      "key": "DEMO-33",
+      "_intent": "stale",
+      "fields": {
+        "summary": "Re-baseline the component catalogue",
+        "issuetype": {
+          "name": "Story"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede24j",
+          "displayName": "S. Zulu",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-160d",
+        "updated": "@-91d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10034",
+      "key": "DEMO-34",
+      "_intent": "stale",
+      "fields": {
+        "summary": "Remove unused webhook endpoints",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede21g",
+          "displayName": "K. Mwale",
+          "active": true
+        },
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-88d",
+        "updated": "@-35d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10035",
+      "key": "DEMO-35",
+      "_intent": "stale+unassigned",
+      "fields": {
+        "summary": "Standardise issue type naming",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": null,
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-115d",
+        "updated": "@-58d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10036",
+      "key": "DEMO-36",
+      "_intent": "stale",
+      "fields": {
+        "summary": "Verify licence counts against billing",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede22h",
+          "displayName": "T. Banda",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-93d",
+        "updated": "@-33d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10037",
+      "key": "DEMO-37",
+      "_intent": "highprio-stale+stale",
+      "fields": {
+        "summary": "Production export job failing nightly",
+        "issuetype": {
+          "name": "Bug"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede23i",
+          "displayName": "N. Phiri",
+          "active": true
+        },
+        "priority": {
+          "name": "Highest"
+        },
+        "created": "@-45d",
+        "updated": "@-11d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10038",
+      "key": "DEMO-38",
+      "_intent": "highprio-stale",
+      "fields": {
+        "summary": "Customer portal login intermittent",
+        "issuetype": {
+          "name": "Bug"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "Blocked",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "Blocked"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede24j",
+          "displayName": "S. Zulu",
+          "active": true
+        },
+        "priority": {
+          "name": "Highest"
+        },
+        "created": "@-30d",
+        "updated": "@-9d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10039",
+      "key": "DEMO-39",
+      "_intent": "highprio-stale",
+      "fields": {
+        "summary": "Permission scheme drift on ITS",
+        "issuetype": {
+          "name": "Bug"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede21g",
+          "displayName": "K. Mwale",
+          "active": true
+        },
+        "priority": {
+          "name": "High"
+        },
+        "created": "@-26d",
+        "updated": "@-15d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10040",
+      "key": "DEMO-40",
+      "_intent": "highprio-stale",
+      "fields": {
+        "summary": "SLA clock not pausing on hold",
+        "issuetype": {
+          "name": "Bug"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Review",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Review"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede22h",
+          "displayName": "T. Banda",
+          "active": true
+        },
+        "priority": {
+          "name": "High"
+        },
+        "created": "@-21d",
+        "updated": "@-12d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10041",
+      "key": "DEMO-41",
+      "_intent": "highprio-stale+unassigned",
+      "fields": {
+        "summary": "Assets sync dropping records",
+        "issuetype": {
+          "name": "Bug"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": null,
+        "priority": {
+          "name": "Highest"
+        },
+        "created": "@-39d",
+        "updated": "@-19d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10042",
+      "key": "DEMO-42",
+      "_intent": "highprio-stale",
+      "fields": {
+        "summary": "Automation rule hitting usage limit",
+        "issuetype": {
+          "name": "Bug"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede23i",
+          "displayName": "N. Phiri",
+          "active": true
+        },
+        "priority": {
+          "name": "High"
+        },
+        "created": "@-17d",
+        "updated": "@-8d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10043",
+      "key": "DEMO-43",
+      "_intent": "status-age",
+      "fields": {
+        "summary": "Replatform the reporting service",
+        "issuetype": {
+          "name": "Story"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede24j",
+          "displayName": "S. Zulu",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-90d",
+        "updated": "@-3d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10044",
+      "key": "DEMO-44",
+      "_intent": "status-age",
+      "fields": {
+        "summary": "Split the monolith deployment",
+        "issuetype": {
+          "name": "Story"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede21g",
+          "displayName": "K. Mwale",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-75d",
+        "updated": "@-2d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10045",
+      "key": "DEMO-45",
+      "_intent": "status-age",
+      "fields": {
+        "summary": "Negotiate renewal with vendor",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "Blocked",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "Blocked"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede22h",
+          "displayName": "T. Banda",
+          "active": true
+        },
+        "priority": {
+          "name": "High"
+        },
+        "created": "@-64d",
+        "updated": "@-4d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10046",
+      "key": "DEMO-46",
+      "_intent": "status-age",
+      "fields": {
+        "summary": "Data retention policy sign-off",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Review",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Review"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede23i",
+          "displayName": "N. Phiri",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-58d",
+        "updated": "@-1d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10047",
+      "key": "DEMO-47",
+      "_intent": "status-age",
+      "fields": {
+        "summary": "Rework the intake form",
+        "issuetype": {
+          "name": "Story"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede24j",
+          "displayName": "S. Zulu",
+          "active": true
+        },
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-52d",
+        "updated": "@-5d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10048",
+      "key": "DEMO-48",
+      "_intent": "status-age+multipage-changelog",
+      "fields": {
+        "summary": "Consolidate the two JSM portals",
+        "issuetype": {
+          "name": "Story"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede21g",
+          "displayName": "K. Mwale",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-47d",
+        "updated": "@-2d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10049",
+      "key": "DEMO-49",
+      "_intent": "status-age+excluded-status+stale",
+      "fields": {
+        "summary": "Awaiting customer network details",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "Waiting for Customer",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "Waiting for Customer"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede22h",
+          "displayName": "T. Banda",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-66d",
+        "updated": "@-40d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10050",
+      "key": "DEMO-50",
+      "_intent": "status-age+unassigned",
+      "fields": {
+        "summary": "Long-lived spike on search relevance",
+        "issuetype": {
+          "name": "Story"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": null,
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-71d",
+        "updated": "@-6d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10051",
+      "key": "DEMO-51",
+      "_intent": "boundary:done-overdue",
+      "fields": {
+        "summary": "Closed but was overdue (must NOT flag overdue)",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "Done",
+          "statusCategory": {
+            "key": "done",
+            "name": "Done"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede21g",
+          "displayName": "K. Mwale",
+          "active": true
+        },
+        "priority": {
+          "name": "High"
+        },
+        "created": "@-60d",
+        "updated": "@-10d",
+        "duedate": "@-30d",
+        "resolution": {
+          "name": "Done"
+        },
+        "resolutiondate": "@-10d"
+      }
+    },
+    {
+      "id": "10052",
+      "key": "DEMO-52",
+      "_intent": "boundary:due-today",
+      "fields": {
+        "summary": "Due exactly today (must NOT flag overdue)",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede22h",
+          "displayName": "T. Banda",
+          "active": true
+        },
+        "priority": {
+          "name": "High"
+        },
+        "created": "@-20d",
+        "updated": "@-1d",
+        "duedate": "@0d",
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10053",
+      "key": "DEMO-53",
+      "_intent": "boundary:stale-equal",
+      "fields": {
+        "summary": "Updated exactly 30 days ago (stale threshold)",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede23i",
+          "displayName": "N. Phiri",
+          "active": true
+        },
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-70d",
+        "updated": "@-30d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10054",
+      "key": "DEMO-54",
+      "_intent": "boundary:stale-under",
+      "fields": {
+        "summary": "Updated 29 days ago (must NOT flag stale)",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede24j",
+          "displayName": "S. Zulu",
+          "active": true
+        },
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-70d",
+        "updated": "@-29d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10055",
+      "key": "DEMO-55",
+      "_intent": "boundary:stale-over",
+      "fields": {
+        "summary": "Updated 31 days ago (must flag stale)",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede21g",
+          "displayName": "K. Mwale",
+          "active": true
+        },
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-70d",
+        "updated": "@-31d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10056",
+      "key": "DEMO-56",
+      "_intent": "boundary:no-transition-recent",
+      "fields": {
+        "summary": "Created 3 days ago, never transitioned",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede22h",
+          "displayName": "T. Banda",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-3d",
+        "updated": "@-3d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10057",
+      "key": "DEMO-57",
+      "_intent": "boundary:no-transition-old",
+      "fields": {
+        "summary": "Created 60 days ago, never transitioned",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede23i",
+          "displayName": "N. Phiri",
+          "active": true
+        },
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-60d",
+        "updated": "@-4d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10058",
+      "key": "DEMO-58",
+      "_intent": "boundary:reopened",
+      "fields": {
+        "summary": "Reopened after being closed",
+        "issuetype": {
+          "name": "Bug"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "In Progress",
+          "statusCategory": {
+            "key": "indeterminate",
+            "name": "In Progress"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede24j",
+          "displayName": "S. Zulu",
+          "active": true
+        },
+        "priority": {
+          "name": "High"
+        },
+        "created": "@-100d",
+        "updated": "@-3d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10059",
+      "key": "DEMO-59",
+      "_intent": "boundary:csv-injection",
+      "fields": {
+        "summary": "=cmd|' /C calc'!A0 formula-looking summary",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": {
+          "accountId": "5b10a2844c20165700ede21g",
+          "displayName": "K. Mwale",
+          "active": true
+        },
+        "priority": {
+          "name": "Low"
+        },
+        "created": "@-40d",
+        "updated": "@-36d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10060",
+      "key": "DEMO-60",
+      "_intent": "boundary:html-escaping",
+      "fields": {
+        "summary": "<script>alert('xss')</script> in the summary",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": null,
+        "priority": {
+          "name": "Medium"
+        },
+        "created": "@-44d",
+        "updated": "@-41d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    },
+    {
+      "id": "10061",
+      "key": "DEMO-61",
+      "_intent": "boundary:null-priority",
+      "fields": {
+        "summary": "Issue with no priority set at all",
+        "issuetype": {
+          "name": "Task"
+        },
+        "project": {
+          "key": "DEMO",
+          "name": "Demo Delivery"
+        },
+        "status": {
+          "name": "To Do",
+          "statusCategory": {
+            "key": "new",
+            "name": "To Do"
+          }
+        },
+        "assignee": null,
+        "priority": null,
+        "created": "@-37d",
+        "updated": "@-34d",
+        "duedate": null,
+        "resolution": null,
+        "resolutiondate": null
+      }
+    }
+  ]
+}
