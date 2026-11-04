@@ -71,6 +71,424 @@
       ]
     },
     {
+      "issueId": "10006",
+      "issueKey": "DEMO-6",
+      "changeHistories": [
+        {
+          "id": "900600",
+          "created": "@-6d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10007",
+      "issueKey": "DEMO-7",
+      "changeHistories": [
+        {
+          "id": "900700",
+          "created": "@-3d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10009",
+      "issueKey": "DEMO-9",
+      "changeHistories": [
+        {
+          "id": "900900",
+          "created": "@-4d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10010",
+      "issueKey": "DEMO-10",
+      "changeHistories": [
+        {
+          "id": "901000",
+          "created": "@-2d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10011",
+      "issueKey": "DEMO-11",
+      "changeHistories": [
+        {
+          "id": "901100",
+          "created": "@-5d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10014",
+      "issueKey": "DEMO-14",
+      "changeHistories": [
+        {
+          "id": "901400",
+          "created": "@-4d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10017",
+      "issueKey": "DEMO-17",
+      "changeHistories": [
+        {
+          "id": "901700",
+          "created": "@-5d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10019",
+      "issueKey": "DEMO-19",
+      "changeHistories": [
+        {
+          "id": "901900",
+          "created": "@-4d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10021",
+      "issueKey": "DEMO-21",
+      "changeHistories": [
+        {
+          "id": "902100",
+          "created": "@-6d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10022",
+      "issueKey": "DEMO-22",
+      "changeHistories": [
+        {
+          "id": "902200",
+          "created": "@-7d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10023",
+      "issueKey": "DEMO-23",
+      "changeHistories": [
+        {
+          "id": "902300",
+          "created": "@-8d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10025",
+      "issueKey": "DEMO-25",
+      "changeHistories": [
+        {
+          "id": "902500",
+          "created": "@-9d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "Blocked"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10028",
+      "issueKey": "DEMO-28",
+      "changeHistories": [
+        {
+          "id": "902800",
+          "created": "@-63d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10030",
+      "issueKey": "DEMO-30",
+      "changeHistories": [
+        {
+          "id": "903000",
+          "created": "@-40d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10032",
+      "issueKey": "DEMO-32",
+      "changeHistories": [
+        {
+          "id": "903200",
+          "created": "@-46d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10033",
+      "issueKey": "DEMO-33",
+      "changeHistories": [
+        {
+          "id": "903300",
+          "created": "@-93d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10035",
+      "issueKey": "DEMO-35",
+      "changeHistories": [
+        {
+          "id": "903500",
+          "created": "@-60d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10037",
+      "issueKey": "DEMO-37",
+      "changeHistories": [
+        {
+          "id": "903700",
+          "created": "@-13d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10038",
+      "issueKey": "DEMO-38",
+      "changeHistories": [
+        {
+          "id": "903800",
+          "created": "@-11d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "Blocked"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10039",
+      "issueKey": "DEMO-39",
+      "changeHistories": [
+        {
+          "id": "903900",
+          "created": "@-17d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10040",
+      "issueKey": "DEMO-40",
+      "changeHistories": [
+        {
+          "id": "904000",
+          "created": "@-14d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issueId": "10041",
+      "issueKey": "DEMO-41",
+      "changeHistories": [
+        {
+          "id": "904100",
+          "created": "@-21d",
+          "items": [
+            {
+              "field": "status",
+              "fieldId": "status",
+              "fieldtype": "jira",
+              "fromString": "To Do",
+              "toString": "In Progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "issueId": "10043",
       "issueKey": "DEMO-43",
       "changeHistories": [

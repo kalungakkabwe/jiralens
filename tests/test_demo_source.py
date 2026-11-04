@@ -167,6 +167,44 @@ class TestStatusHistories:
         assert source.fetch_status_history([]) == {}
 
 
+class TestDatasetRealism:
+    """Invariants that keep the demo credible rather than merely well-formed."""
+
+    INITIAL_STATUS = "To Do"
+
+    def test_every_issue_outside_the_initial_status_has_a_transition(
+        self, source: DemoIssueSource, issues: list[IssueRecord]
+    ) -> None:
+        """An issue cannot reach 'In Progress' without transitioning there.
+
+        Without this, such an issue falls back to its creation date and the status-age
+        check reports an age that could not occur in real Jira.
+        """
+        histories = source.fetch_status_history([i.key for i in issues])
+        missing = [
+            i.key for i in issues if i.status != self.INITIAL_STATUS and not histories.get(i.key)
+        ]
+        assert missing == [], f"non-initial status with no history: {missing}"
+
+    def test_initial_status_issues_may_legitimately_have_no_history(
+        self, source: DemoIssueSource, issues: list[IssueRecord]
+    ) -> None:
+        """This is the real-world case the created-date fallback exists for."""
+        histories = source.fetch_status_history([i.key for i in issues])
+        untouched = [
+            i.key for i in issues if i.status == self.INITIAL_STATUS and not histories.get(i.key)
+        ]
+        assert untouched, "no fixture exercises the created-date fallback"
+
+    def test_no_transition_predates_the_issue_it_belongs_to(
+        self, source: DemoIssueSource, issues: list[IssueRecord]
+    ) -> None:
+        histories = source.fetch_status_history([i.key for i in issues])
+        for issue in issues:
+            for change in histories.get(issue.key, []):
+                assert change.changed_at >= issue.created_at, issue.key
+
+
 class TestTimezoneIndependence:
     def test_the_same_dataset_loads_under_a_dst_observing_zone(self) -> None:
         chicago_cfg = ScanConfig(project_key="DEMO", timezone="America/Chicago")

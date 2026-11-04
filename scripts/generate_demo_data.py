@@ -817,6 +817,42 @@ CHANGELOGS: dict[int, list[tuple[int, str, str]]] = {
     # `NOT status CHANGED AFTER -14d` flags both, which is the documented divergence.
 }
 
+#: The project's initial status. An issue sitting here may legitimately have no status
+#: history at all — it was created here and never moved.
+INITIAL_STATUS = "To Do"
+
+#: Issues that must keep an empty history even though the invariant below would fill
+#: one in. These are the deliberate no-transition boundary cases.
+NO_HISTORY_BY_DESIGN = frozenset({56, 57, 61})
+
+
+def autofill_changelogs() -> dict[int, list[tuple[int, str, str]]]:
+    """Give every issue outside the initial status at least one transition.
+
+    Without this, a fixture sitting in ``In Progress`` with no history falls back to its
+    creation date and the status-age check reports "In Progress for 95 days since it was
+    created" — which cannot happen in real Jira, because an issue must transition to
+    reach that status. The first smoke run flagged 46 of 60 issues for status age purely
+    because of this gap, which would make the demo dashboard look broken.
+
+    The synthesised transition is placed just before the issue's last update, so a
+    recently-active issue has a short status age and a stale one has a long age. Issues
+    in the initial status keep their empty history, which is both realistic and exactly
+    what the fallback path is for.
+    """
+    filled = {n: list(changes) for n, changes in CHANGELOGS.items()}
+    for n, _summary, _type, status, *_rest in SPECS:
+        updated = _rest[3]  # the "updated" token, e.g. "@-46d"
+        created = _rest[2]
+        if n in filled or n in NO_HISTORY_BY_DESIGN or status == INITIAL_STATUS:
+            continue
+        updated_days = int(updated.lstrip("@+-").rstrip("d"))
+        created_days = int(created.lstrip("@+-").rstrip("d"))
+        # Moved shortly before the last update, but never before it was created.
+        moved_days_ago = min(updated_days + 2, created_days - 1)
+        filled[n] = [(max(moved_days_ago, 0), INITIAL_STATUS, status)]
+    return filled
+
 
 def _user(handle: str | None) -> dict[str, Any] | None:
     if handle is None:
@@ -862,7 +898,7 @@ def build_changelogs() -> dict[str, Any]:
     result to the engine.
     """
     entries: list[dict[str, Any]] = []
-    for n, changes in sorted(CHANGELOGS.items()):
+    for n, changes in sorted(autofill_changelogs().items()):
         entries.append(
             {
                 "issueId": str(10000 + n),
