@@ -41,8 +41,37 @@ audit engine runs end to end against synthetic data today:
 - **Phase 3** — `run_scan` orchestration returning a complete `ScanResult`, with
   progress stages and honest handling of missing status history.
 - **Phase 4** — CSV, JSON and HTML exporters, all driven from one `ScanResult`.
-- **Phases 6–8** — the read-only Jira client and the Streamlit dashboard. See
-  `CHANGELOG.md`.
+- **Phase 8** — the Streamlit dashboard: overview, filterable findings, issue
+  explorer and methodology.
+- **Phases 6–7** — the read-only Jira client, so live scans work as well as demo
+  scans. See `CHANGELOG.md`.
+
+## Dashboard
+
+```bash
+streamlit run streamlit_app.py
+```
+
+Demo mode needs no credentials and runs the same audit engine a live scan would.
+
+![Overview](docs/screenshots/02-overview.png)
+
+The findings table filters by severity, check, assignee, priority, status and age,
+and searches issue keys, summaries and reasons. Filtering re-renders from the scan
+held in session state — it never re-runs the scan or calls Jira again.
+
+![Findings](docs/screenshots/03-findings.png)
+
+The issue explorer lists every issue the scan retrieved, including those with no
+findings, which is how you confirm the scan saw the whole project rather than a
+subset.
+
+![Issue explorer](docs/screenshots/04-issue-explorer.png)
+
+The methodology tab states what each check means, the thresholds this scan used, how
+ages are counted, the limitations, and why there is no health score.
+
+![Methodology](docs/screenshots/05-methodology.png)
 
 ```
 $ jiralens demo --exclude-status "To Do" --output reports/demo

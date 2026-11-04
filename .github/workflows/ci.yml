@@ -58,6 +58,16 @@ jobs:
       - name: Confirm demo mode writes all three reports
         run: jiralens demo --output "$RUNNER_TEMP/reports"
 
+      - name: Confirm the dashboard boots
+        run: |
+          timeout 60 streamlit run streamlit_app.py \
+            --server.headless true --server.port 8599 \
+            --browser.gatherUsageStats false &
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8599/_stcore/health && break || sleep 2
+          done
+          curl -sf http://localhost:8599/_stcore/health
+
       - name: Confirm the fixtures are reproducible
         run: |
           python scripts/generate_demo_data.py

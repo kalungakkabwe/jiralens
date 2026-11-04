@@ -41,6 +41,23 @@ All notable changes to this project are documented here. Format follows
 - `sample_reports/` holds committed example output, generated at a fixed instant by
   `scripts/generate_sample_reports.py` so regeneration is byte-identical.
 
+- **Phase 8** — the Streamlit dashboard, with four tabs: Overview (metrics, findings
+  by check, scope caveats, downloads for all three report formats), Findings (filter
+  by severity, check, assignee, priority, status and minimum age, plus free-text
+  search), Issue explorer (every scanned issue including the clean ones) and
+  Methodology (what each check means, the thresholds used, limitations, and why there
+  is no health score).
+- Table shaping and filtering live in `jiralens.dashboard`, not in `streamlit_app.py`,
+  so they are unit-tested without starting Streamlit. The app collects input, calls
+  `run_scan` and draws the result.
+- The completed `ScanResult` is held in session state, so changing a filter re-renders
+  from memory and never re-runs the scan or calls Jira again.
+- A source seam (`build_source`) means Phase 7 plugs `JiraIssueSource` in without any
+  other change to the app. Live mode today explains itself rather than failing.
+- Streamlit AppTest coverage: the app boots, a demo scan populates every table,
+  filters narrow results, thresholds reach the engine, skipping history surfaces the
+  skipped check, and every failure path renders a message rather than a traceback.
+
 ### Export safety
 
 - **CSV formula injection**: any text cell beginning `=`, `+`, `-`, `@`, tab or
