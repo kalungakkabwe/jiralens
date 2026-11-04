@@ -28,6 +28,33 @@ All notable changes to this project are documented here. Format follows
 - `jiralens demo` now runs a real end-to-end audit of the synthetic dataset and prints
   the overview, per-check counts, top findings and scope caveats. The renderer is shared
   with the live `scan` command arriving in Phase 7.
+- **Phase 4** — the three exporters, all driven from one `ScanResult` so they cannot
+  disagree with each other or with the dashboard:
+  - CSV — one row per finding, 20 published columns, findings joined back to their
+    issue for assignee, status and dates
+  - JSON — versioned machine-readable summary (`schema_version`), counts, the full
+    configuration so a scan is reproducible, warnings, skipped checks and findings
+  - HTML — executive report with summary cards, high and warning tables, grouping by
+    check and by assignee, methodology, limitations and scan metadata
+- `jiralens demo --output DIR --format csv|json|html` writes them; files are named
+  `<scan_id>-*` so repeated scans accumulate instead of overwriting.
+- `sample_reports/` holds committed example output, generated at a fixed instant by
+  `scripts/generate_sample_reports.py` so regeneration is byte-identical.
+
+### Export safety
+
+- **CSV formula injection**: any text cell beginning `=`, `+`, `-`, `@`, tab or
+  carriage return is prefixed with an apostrophe, so a Jira summary cannot execute
+  when an administrator opens the export in Excel. Numeric cells are deliberately left
+  alone — escaping them would turn a negative value into text and break every total.
+- **HTML injection**: Jinja2 autoescaping is set explicitly to `True`, because
+  `select_autoescape` does not enable escaping for a `.html.j2` filename. A summary
+  containing markup renders as text; the fixtures include such a payload and a test
+  asserts the escaped form appears and the raw form does not.
+- The HTML report embeds no scripts and loads nothing from the network, so it opens
+  correctly from a local folder, an email attachment or a printer.
+- `StrictUndefined` is set, so a typo in the template fails the render instead of
+  silently producing a blank cell in a report someone will act on.
 
 ### Decisions pinned by tests
 
@@ -51,5 +78,5 @@ All notable changes to this project are documented here. Format follows
 
 ### Not yet implemented
 
-- Phase 4 reports, Phase 5 CLI exports, Phase 6/7 live Jira client, Phase 8 Streamlit
-  dashboard.
+- Phase 6/7 live Jira client (`connection-test` and `scan` validate configuration and
+  then stop), Phase 8 Streamlit dashboard.

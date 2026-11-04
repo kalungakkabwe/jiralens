@@ -8,6 +8,7 @@ command in Phase 7 prints exactly what ``demo`` prints today.
 from __future__ import annotations
 
 from datetime import datetime
+from pathlib import Path
 
 import typer
 from rich.console import Console
@@ -18,6 +19,7 @@ from jiralens.config import load_settings
 from jiralens.exceptions import JiraLensError
 from jiralens.logging_config import configure_logging
 from jiralens.models import ScanConfig, ScanResult
+from jiralens.reports import ALL_FORMATS, write_reports
 from jiralens.scanner import ScanProgress, findings_by_check, run_scan
 from jiralens.sources.demo import DEMO_PROJECT_KEY, DemoIssueSource
 
@@ -106,6 +108,16 @@ def _render_result(result: ScanResult, *, top: int) -> None:
             console.print(f"  • {warning}")
 
 
+def _render_written(written: dict[str, Path]) -> None:
+    """List the report files produced, so the user knows exactly what to open."""
+    if not written:
+        return
+    console.print("\n[bold]Reports written[/]")
+    for kind, path in written.items():
+        size = path.stat().st_size
+        console.print(f"  {kind:<5} {path}  [dim]({size:,} bytes)[/]")
+
+
 @app.command()
 def version() -> None:
     """Print the JiraLens version."""
@@ -178,6 +190,15 @@ def demo(
     ),
     timezone: str | None = typer.Option(None, "--timezone", help="IANA display timezone."),
     top: int = typer.Option(10, "--top", help="How many findings to print."),
+    output: str | None = typer.Option(
+        None, "--output", "-o", help="Write reports into this folder."
+    ),
+    report_format: list[str] = typer.Option(
+        list(ALL_FORMATS),
+        "--format",
+        "-f",
+        help="Report format to write. Repeatable. Only used with --output.",
+    ),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Print each scan stage."),
 ) -> None:
     """Run a full audit against the bundled synthetic dataset. No credentials needed."""
@@ -201,13 +222,15 @@ def demo(
                 err_console.print(f"[dim]{progress}[/]")
 
         result = run_scan(DemoIssueSource(now=now), config, now=now, on_progress=show)
+        written = write_reports(result, output, formats=report_format) if output else {}
     except JiraLensError as exc:
         _fail(exc)
 
     _render_result(result, top=top)
-    console.print(
-        "\n[yellow]Exports arrive in Phase 4 (CSV, HTML, JSON); the dashboard in Phase 8.[/]"
-    )
+    _render_written(written)
+    if not written:
+        console.print("\n[dim]Pass --output DIR to write the CSV, HTML and JSON reports.[/]")
+    console.print("[yellow]The interactive dashboard arrives in Phase 8.[/]")
 
 
 if __name__ == "__main__":  # pragma: no cover

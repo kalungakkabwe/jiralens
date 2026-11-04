@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JiraLens report — DEMO — 20261104-DEMO-103000</title>
+<style>
+  :root {
+    --ink: #1a1d21; --muted: #5c6670; --line: #d8dde3; --bg: #ffffff;
+    --panel: #f6f8fa; --high: #a4262c; --high-bg: #fdf3f3;
+    --warn: #8a6100; --warn-bg: #fff9ec; --info: #0b5cab;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 32px; background: var(--bg); color: var(--ink);
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    max-width: 1100px;
+  }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 16px; margin: 32px 0 8px; padding-bottom: 6px; border-bottom: 2px solid var(--line); }
+  h3 { font-size: 14px; margin: 20px 0 6px; color: var(--muted); font-weight: 600; }
+  p { margin: 6px 0; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .readonly {
+    display: inline-block; padding: 3px 9px; border-radius: 3px; font-size: 12px;
+    background: #e8f3ec; color: #1d6b3c; font-weight: 600; margin-bottom: 16px;
+  }
+  .cards { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0 4px; }
+  .card {
+    flex: 1 1 150px; border: 1px solid var(--line); border-radius: 5px;
+    padding: 12px 14px; background: var(--panel);
+  }
+  .card .n { font-size: 26px; font-weight: 650; line-height: 1.1; }
+  .card .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .card.high { background: var(--high-bg); border-color: #e7c3c5; }
+  .card.high .n { color: var(--high); }
+  .card.warn { background: var(--warn-bg); border-color: #e8d9ad; }
+  .card.warn .n { color: var(--warn); }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 4px; font-size: 13px; }
+  th, td { text-align: left; padding: 7px 9px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--panel); font-size: 12px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); }
+  td.num, th.num { text-align: right; white-space: nowrap; }
+  tbody tr:nth-child(even) { background: #fbfcfd; }
+  .key { white-space: nowrap; font-weight: 600; }
+  a { color: #0b5cab; }
+  .sev { font-weight: 650; font-size: 12px; text-transform: uppercase; white-space: nowrap; }
+  .sev-high { color: var(--high); }
+  .sev-warning { color: var(--warn); }
+  .sev-info { color: #0b5cab; }
+  dl.meta { display: grid; grid-template-columns: max-content 1fr; gap: 4px 18px; margin: 8px 0; }
+  dl.meta dt { color: var(--muted); }
+  dl.meta dd { margin: 0; }
+  code { background: var(--panel); padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+  ul.notes { margin: 6px 0; padding-left: 20px; }
+  ul.notes li { margin: 5px 0; }
+  .none { color: var(--muted); font-style: italic; }
+  footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+  @media print {
+    body { padding: 0; max-width: none; font-size: 11pt; }
+    h2 { page-break-after: avoid; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+    a { color: var(--ink); text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Project health report — DEMO</h1>
+<p class="sub">20261104-DEMO-103000 · generated 2026-11-04 10:30 CAT · source: demo</p>
+<span class="readonly">Read-only scan — no change was made to Jira</span>
+
+<h2>Executive summary</h2>
+<div class="cards">
+  <div class="card"><div class="n">60</div><div class="l">Issues scanned</div></div>
+  <div class="card high"><div class="n">18</div><div class="l">High findings</div></div>
+  <div class="card warn"><div class="n">42</div><div class="l">Warnings</div></div>
+  <div class="card"><div class="n">47</div><div class="l">Issues flagged</div></div>
+  <div class="card"><div class="n">13</div><div class="l">Issues with no findings</div></div>
+</div>
+<p>
+  18 findings need attention first.
+  47 of 60 open issues carry at least one finding.
+</p>
+
+<h2>Scope and thresholds</h2>
+<dl class="meta">
+  <dt>Query</dt><dd><code>project = DEMO AND statusCategory != Done ORDER BY updated ASC</code></dd>
+  <dt>Stale threshold</dt><dd>30 calendar days</dd>
+  <dt>High-priority stale threshold</dt><dd>7 calendar days</dd>
+  <dt>Current-status age threshold</dt><dd>14 calendar days</dd>
+  <dt>Priorities treated as high</dt><dd>High, Highest</dd>
+  <dt>Statuses excluded from status age</dt>
+  <dd>To Do, Waiting for Customer</dd>
+  <dt>Display timezone</dt><dd>Africa/Lusaka</dd>
+  <dt>Status history retrieved</dt><dd>yes</dd>
+</dl>
+
+
+<h2>High-risk findings</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Severity</th><th>Check</th><th>Issue</th><th>Summary</th>
+      <th>Assignee</th><th>Status</th><th class="num">Age</th><th>Reason</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-45" target="_blank" rel="noopener noreferrer">DEMO-45</a></td>
+      <td>Negotiate renewal with vendor</td>
+      <td>T. Banda</td>
+      <td>Blocked</td>
+      <td class="num">55d</td>
+      <td>Issue has remained in &#39;Blocked&#39; for 55 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-41" target="_blank" rel="noopener noreferrer">DEMO-41</a></td>
+      <td>Assets sync dropping records</td>
+      <td>Unassigned</td>
+      <td>In Progress</td>
+      <td class="num">21d</td>
+      <td>Issue has remained in &#39;In Progress&#39; for 21 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>High-priority stale work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-41" target="_blank" rel="noopener noreferrer">DEMO-41</a></td>
+      <td>Assets sync dropping records</td>
+      <td>Unassigned</td>
+      <td>In Progress</td>
+      <td class="num">19d</td>
+      <td>Highest-priority issue has had no recorded Jira activity for 19 calendar days (threshold 7).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-52" target="_blank" rel="noopener noreferrer">DEMO-52</a></td>
+      <td>Due exactly today (must NOT flag overdue)</td>
+      <td>T. Banda</td>
+      <td>In Progress</td>
+      <td class="num">19d</td>
+      <td>Issue has remained in &#39;In Progress&#39; for 19 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-39" target="_blank" rel="noopener noreferrer">DEMO-39</a></td>
+      <td>Permission scheme drift on ITS</td>
+      <td>K. Mwale</td>
+      <td>In Progress</td>
+      <td class="num">17d</td>
+      <td>Issue has remained in &#39;In Progress&#39; for 17 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>High-priority stale work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-39" target="_blank" rel="noopener noreferrer">DEMO-39</a></td>
+      <td>Permission scheme drift on ITS</td>
+      <td>K. Mwale</td>
+      <td>In Progress</td>
+      <td class="num">15d</td>
+      <td>High-priority issue has had no recorded Jira activity for 15 calendar days (threshold 7).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>Overdue unresolved work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-19" target="_blank" rel="noopener noreferrer">DEMO-19</a></td>
+      <td>Submit quarterly access review</td>
+      <td>N. Phiri</td>
+      <td>In Progress</td>
+      <td class="num">12d</td>
+      <td>Issue is 12 calendar days past its due date (2026-10-23) and is not complete.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>High-priority stale work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-40" target="_blank" rel="noopener noreferrer">DEMO-40</a></td>
+      <td>SLA clock not pausing on hold</td>
+      <td>T. Banda</td>
+      <td>In Review</td>
+      <td class="num">12d</td>
+      <td>High-priority issue has had no recorded Jira activity for 12 calendar days (threshold 7).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>High-priority stale work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-37" target="_blank" rel="noopener noreferrer">DEMO-37</a></td>
+      <td>Production export job failing nightly</td>
+      <td>N. Phiri</td>
+      <td>In Progress</td>
+      <td class="num">11d</td>
+      <td>Highest-priority issue has had no recorded Jira activity for 11 calendar days (threshold 7).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>High-priority stale work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-38" target="_blank" rel="noopener noreferrer">DEMO-38</a></td>
+      <td>Customer portal login intermittent</td>
+      <td>S. Zulu</td>
+      <td>Blocked</td>
+      <td class="num">9d</td>
+      <td>Highest-priority issue has had no recorded Jira activity for 9 calendar days (threshold 7).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>Overdue unresolved work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-20" target="_blank" rel="noopener noreferrer">DEMO-20</a></td>
+      <td>Close out vendor security questionnaire</td>
+      <td>S. Zulu</td>
+      <td>To Do</td>
+      <td class="num">8d</td>
+      <td>Issue is 8 calendar days past its due date (2026-10-27) and is not complete.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>High-priority stale work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-42" target="_blank" rel="noopener noreferrer">DEMO-42</a></td>
+      <td>Automation rule hitting usage limit</td>
+      <td>N. Phiri</td>
+      <td>To Do</td>
+      <td class="num">8d</td>
+      <td>High-priority issue has had no recorded Jira activity for 8 calendar days (threshold 7).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>Overdue unresolved work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-25" target="_blank" rel="noopener noreferrer">DEMO-25</a></td>
+      <td>Finalise DR test evidence pack</td>
+      <td>S. Zulu</td>
+      <td>Blocked</td>
+      <td class="num">5d</td>
+      <td>Issue is 5 calendar days past its due date (2026-10-30) and is not complete.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>Overdue unresolved work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-23" target="_blank" rel="noopener noreferrer">DEMO-23</a></td>
+      <td>Replace expiring API integration token</td>
+      <td>Unassigned</td>
+      <td>In Progress</td>
+      <td class="num">2d</td>
+      <td>Issue is 2 calendar days past its due date (2026-11-02) and is not complete.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>Unassigned open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-11" target="_blank" rel="noopener noreferrer">DEMO-11</a></td>
+      <td>Renew customer reporting certificate</td>
+      <td>Unassigned</td>
+      <td>In Progress</td>
+      <td class="num">—</td>
+      <td>Issue is open in &#39;In Progress&#39; with no assignee.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>Unassigned open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-18" target="_blank" rel="noopener noreferrer">DEMO-18</a></td>
+      <td>Investigate duplicate asset records</td>
+      <td>Unassigned</td>
+      <td>To Do</td>
+      <td class="num">—</td>
+      <td>Issue is open in &#39;To Do&#39; with no assignee.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>Unassigned open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-23" target="_blank" rel="noopener noreferrer">DEMO-23</a></td>
+      <td>Replace expiring API integration token</td>
+      <td>Unassigned</td>
+      <td>In Progress</td>
+      <td class="num">—</td>
+      <td>Issue is open in &#39;In Progress&#39; with no assignee.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-high">high</td>
+      <td>Unassigned open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-41" target="_blank" rel="noopener noreferrer">DEMO-41</a></td>
+      <td>Assets sync dropping records</td>
+      <td>Unassigned</td>
+      <td>In Progress</td>
+      <td class="num">—</td>
+      <td>Issue is open in &#39;In Progress&#39; with no assignee.</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h2>Warning findings</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Severity</th><th>Check</th><th>Issue</th><th>Summary</th>
+      <th>Assignee</th><th>Status</th><th class="num">Age</th><th>Reason</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-33" target="_blank" rel="noopener noreferrer">DEMO-33</a></td>
+      <td>Re-baseline the component catalogue</td>
+      <td>S. Zulu</td>
+      <td>In Progress</td>
+      <td class="num">93d</td>
+      <td>Issue has remained in &#39;In Progress&#39; for 93 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Stale open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-33" target="_blank" rel="noopener noreferrer">DEMO-33</a></td>
+      <td>Re-baseline the component catalogue</td>
+      <td>S. Zulu</td>
+      <td>In Progress</td>
+      <td class="num">91d</td>
+      <td>Issue has had no recorded Jira activity for 91 calendar days (threshold 30).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-43" target="_blank" rel="noopener noreferrer">DEMO-43</a></td>
+      <td>Replatform the reporting service</td>
+      <td>S. Zulu</td>
+      <td>In Progress</td>
+      <td class="num">85d</td>
+      <td>Issue has remained in &#39;In Progress&#39; for 85 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Stale open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-31" target="_blank" rel="noopener noreferrer">DEMO-31</a></td>
+      <td>Retire the old status page</td>
+      <td>T. Banda</td>
+      <td>To Do</td>
+      <td class="num">77d</td>
+      <td>Issue has had no recorded Jira activity for 77 calendar days (threshold 30).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-44" target="_blank" rel="noopener noreferrer">DEMO-44</a></td>
+      <td>Split the monolith deployment</td>
+      <td>K. Mwale</td>
+      <td>In Progress</td>
+      <td class="num">70d</td>
+      <td>Issue has remained in &#39;In Progress&#39; for 70 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-50" target="_blank" rel="noopener noreferrer">DEMO-50</a></td>
+      <td>Long-lived spike on search relevance</td>
+      <td>Unassigned</td>
+      <td>In Progress</td>
+      <td class="num">65d</td>
+      <td>Issue has remained in &#39;In Progress&#39; for 65 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-28" target="_blank" rel="noopener noreferrer">DEMO-28</a></td>
+      <td>Consolidate duplicate dashboards</td>
+      <td>N. Phiri</td>
+      <td>In Progress</td>
+      <td class="num">63d</td>
+      <td>Issue has remained in &#39;In Progress&#39; for 63 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Stale open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-28" target="_blank" rel="noopener noreferrer">DEMO-28</a></td>
+      <td>Consolidate duplicate dashboards</td>
+      <td>N. Phiri</td>
+      <td>In Progress</td>
+      <td class="num">61d</td>
+      <td>Issue has had no recorded Jira activity for 61 calendar days (threshold 30).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-35" target="_blank" rel="noopener noreferrer">DEMO-35</a></td>
+      <td>Standardise issue type naming</td>
+      <td>Unassigned</td>
+      <td>In Progress</td>
+      <td class="num">60d</td>
+      <td>Issue has remained in &#39;In Progress&#39; for 60 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Stale open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-35" target="_blank" rel="noopener noreferrer">DEMO-35</a></td>
+      <td>Standardise issue type naming</td>
+      <td>Unassigned</td>
+      <td>In Progress</td>
+      <td class="num">58d</td>
+      <td>Issue has had no recorded Jira activity for 58 calendar days (threshold 30).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Stale open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-29" target="_blank" rel="noopener noreferrer">DEMO-29</a></td>
+      <td>Review third-party app permissions</td>
+      <td>S. Zulu</td>
+      <td>To Do</td>
+      <td class="num">52d</td>
+      <td>Issue has had no recorded Jira activity for 52 calendar days (threshold 30).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-47" target="_blank" rel="noopener noreferrer">DEMO-47</a></td>
+      <td>Rework the intake form</td>
+      <td>S. Zulu</td>
+      <td>In Progress</td>
+      <td class="num">48d</td>
+      <td>Issue has remained in &#39;In Progress&#39; for 48 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Stale open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-27" target="_blank" rel="noopener noreferrer">DEMO-27</a></td>
+      <td>Update onboarding runbook</td>
+      <td>T. Banda</td>
+      <td>To Do</td>
+      <td class="num">46d</td>
+      <td>Issue has had no recorded Jira activity for 46 calendar days (threshold 30).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-32" target="_blank" rel="noopener noreferrer">DEMO-32</a></td>
+      <td>Document incident severity matrix</td>
+      <td>N. Phiri</td>
+      <td>In Review</td>
+      <td class="num">46d</td>
+      <td>Issue has remained in &#39;In Review&#39; for 46 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Overdue unresolved work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-24" target="_blank" rel="noopener noreferrer">DEMO-24</a></td>
+      <td>Archive FY24 project spaces</td>
+      <td>N. Phiri</td>
+      <td>To Do</td>
+      <td class="num">45d</td>
+      <td>Issue is 45 calendar days past its due date (2026-09-20) and is not complete.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Stale open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-32" target="_blank" rel="noopener noreferrer">DEMO-32</a></td>
+      <td>Document incident severity matrix</td>
+      <td>N. Phiri</td>
+      <td>In Review</td>
+      <td class="num">44d</td>
+      <td>Issue has had no recorded Jira activity for 44 calendar days (threshold 30).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Stale open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-60" target="_blank" rel="noopener noreferrer">DEMO-60</a></td>
+      <td>&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt; in the summary</td>
+      <td>Unassigned</td>
+      <td>To Do</td>
+      <td class="num">41d</td>
+      <td>Issue has had no recorded Jira activity for 41 calendar days (threshold 30).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-30" target="_blank" rel="noopener noreferrer">DEMO-30</a></td>
+      <td>Clean up test automation fixtures</td>
+      <td>K. Mwale</td>
+      <td>In Progress</td>
+      <td class="num">40d</td>
+      <td>Issue has remained in &#39;In Progress&#39; for 40 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-46" target="_blank" rel="noopener noreferrer">DEMO-46</a></td>
+      <td>Data retention policy sign-off</td>
+      <td>N. Phiri</td>
+      <td>In Review</td>
+      <td class="num">40d</td>
+      <td>Issue has remained in &#39;In Review&#39; for 40 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Stale open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-49" target="_blank" rel="noopener noreferrer">DEMO-49</a></td>
+      <td>Awaiting customer network details</td>
+      <td>T. Banda</td>
+      <td>Waiting for Customer</td>
+      <td class="num">40d</td>
+      <td>Issue has had no recorded Jira activity for 40 calendar days (threshold 30).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Stale open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-30" target="_blank" rel="noopener noreferrer">DEMO-30</a></td>
+      <td>Clean up test automation fixtures</td>
+      <td>K. Mwale</td>
+      <td>In Progress</td>
+      <td class="num">38d</td>
+      <td>Issue has had no recorded Jira activity for 38 calendar days (threshold 30).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Stale open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-59" target="_blank" rel="noopener noreferrer">DEMO-59</a></td>
+      <td>=cmd|&#39; /C calc&#39;!A0 formula-looking summary</td>
+      <td>K. Mwale</td>
+      <td>To Do</td>
+      <td class="num">36d</td>
+      <td>Issue has had no recorded Jira activity for 36 calendar days (threshold 30).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Stale open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-34" target="_blank" rel="noopener noreferrer">DEMO-34</a></td>
+      <td>Remove unused webhook endpoints</td>
+      <td>K. Mwale</td>
+      <td>To Do</td>
+      <td class="num">35d</td>
+      <td>Issue has had no recorded Jira activity for 35 calendar days (threshold 30).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Stale open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-61" target="_blank" rel="noopener noreferrer">DEMO-61</a></td>
+      <td>Issue with no priority set at all</td>
+      <td>Unassigned</td>
+      <td>To Do</td>
+      <td class="num">34d</td>
+      <td>Issue has had no recorded Jira activity for 34 calendar days (threshold 30).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Stale open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-36" target="_blank" rel="noopener noreferrer">DEMO-36</a></td>
+      <td>Verify licence counts against billing</td>
+      <td>T. Banda</td>
+      <td>To Do</td>
+      <td class="num">33d</td>
+      <td>Issue has had no recorded Jira activity for 33 calendar days (threshold 30).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-48" target="_blank" rel="noopener noreferrer">DEMO-48</a></td>
+      <td>Consolidate the two JSM portals</td>
+      <td>K. Mwale</td>
+      <td>In Progress</td>
+      <td class="num">32d</td>
+      <td>Issue has remained in &#39;In Progress&#39; for 32 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Overdue unresolved work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-22" target="_blank" rel="noopener noreferrer">DEMO-22</a></td>
+      <td>Migrate reports off deprecated view</td>
+      <td>T. Banda</td>
+      <td>In Review</td>
+      <td class="num">31d</td>
+      <td>Issue is 31 calendar days past its due date (2026-10-04) and is not complete.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Stale open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-55" target="_blank" rel="noopener noreferrer">DEMO-55</a></td>
+      <td>Updated 31 days ago (must flag stale)</td>
+      <td>K. Mwale</td>
+      <td>To Do</td>
+      <td class="num">31d</td>
+      <td>Issue has had no recorded Jira activity for 31 calendar days (threshold 30).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Overdue unresolved work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-21" target="_blank" rel="noopener noreferrer">DEMO-21</a></td>
+      <td>Deliver capacity plan to finance</td>
+      <td>K. Mwale</td>
+      <td>In Progress</td>
+      <td class="num">20d</td>
+      <td>Issue is 20 calendar days past its due date (2026-10-15) and is not complete.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-1" target="_blank" rel="noopener noreferrer">DEMO-1</a></td>
+      <td>Rotate service account credentials</td>
+      <td>K. Mwale</td>
+      <td>In Progress</td>
+      <td class="num">18d</td>
+      <td>Issue has remained in &#39;In Progress&#39; for 18 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Excessive current-status age</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-3" target="_blank" rel="noopener noreferrer">DEMO-3</a></td>
+      <td>Add index to audit log table</td>
+      <td>N. Phiri</td>
+      <td>In Progress</td>
+      <td class="num">16d</td>
+      <td>Issue has remained in &#39;In Progress&#39; for 16 calendar days (threshold 14).</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Overdue unresolved work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-26" target="_blank" rel="noopener noreferrer">DEMO-26</a></td>
+      <td>Update data processing register</td>
+      <td>K. Mwale</td>
+      <td>To Do</td>
+      <td class="num">1d</td>
+      <td>Issue is 1 calendar day past its due date (2026-11-03) and is not complete.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Unassigned open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-12" target="_blank" rel="noopener noreferrer">DEMO-12</a></td>
+      <td>Triage inbound integration errors</td>
+      <td>Unassigned</td>
+      <td>To Do</td>
+      <td class="num">—</td>
+      <td>Issue is open in &#39;To Do&#39; with no assignee.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Unassigned open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-13" target="_blank" rel="noopener noreferrer">DEMO-13</a></td>
+      <td>Decommission legacy SFTP drop</td>
+      <td>Unassigned</td>
+      <td>To Do</td>
+      <td class="num">—</td>
+      <td>Issue is open in &#39;To Do&#39; with no assignee.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Unassigned open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-14" target="_blank" rel="noopener noreferrer">DEMO-14</a></td>
+      <td>Review orphaned permission scheme</td>
+      <td>Unassigned</td>
+      <td>In Progress</td>
+      <td class="num">—</td>
+      <td>Issue is open in &#39;In Progress&#39; with no assignee.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Unassigned open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-15" target="_blank" rel="noopener noreferrer">DEMO-15</a></td>
+      <td>Clarify SLA wording for tier 2</td>
+      <td>Unassigned</td>
+      <td>To Do</td>
+      <td class="num">—</td>
+      <td>Issue is open in &#39;To Do&#39; with no assignee.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Unassigned open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-16" target="_blank" rel="noopener noreferrer">DEMO-16</a></td>
+      <td>Confirm backup retention policy</td>
+      <td>Unassigned</td>
+      <td>To Do</td>
+      <td class="num">—</td>
+      <td>Issue is open in &#39;To Do&#39; with no assignee.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Unassigned open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-17" target="_blank" rel="noopener noreferrer">DEMO-17</a></td>
+      <td>Audit unused automation rules</td>
+      <td>Unassigned</td>
+      <td>In Progress</td>
+      <td class="num">—</td>
+      <td>Issue is open in &#39;In Progress&#39; with no assignee.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Unassigned open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-35" target="_blank" rel="noopener noreferrer">DEMO-35</a></td>
+      <td>Standardise issue type naming</td>
+      <td>Unassigned</td>
+      <td>In Progress</td>
+      <td class="num">—</td>
+      <td>Issue is open in &#39;In Progress&#39; with no assignee.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Unassigned open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-50" target="_blank" rel="noopener noreferrer">DEMO-50</a></td>
+      <td>Long-lived spike on search relevance</td>
+      <td>Unassigned</td>
+      <td>In Progress</td>
+      <td class="num">—</td>
+      <td>Issue is open in &#39;In Progress&#39; with no assignee.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Unassigned open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-60" target="_blank" rel="noopener noreferrer">DEMO-60</a></td>
+      <td>&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt; in the summary</td>
+      <td>Unassigned</td>
+      <td>To Do</td>
+      <td class="num">—</td>
+      <td>Issue is open in &#39;To Do&#39; with no assignee.</td>
+    </tr>
+    <tr>
+      <td class="sev sev-warning">warning</td>
+      <td>Unassigned open work</td>
+      <td class="key"><a href="https://demo-site.example.net/browse/DEMO-61" target="_blank" rel="noopener noreferrer">DEMO-61</a></td>
+      <td>Issue with no priority set at all</td>
+      <td>Unassigned</td>
+      <td>To Do</td>
+      <td class="num">—</td>
+      <td>Issue is open in &#39;To Do&#39; with no assignee.</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<h2>Findings by check</h2>
+<table>
+  <thead><tr><th>Check</th><th class="num">High</th><th class="num">Warning</th><th class="num">Total</th></tr></thead>
+  <tbody>
+    <tr><td>High-priority stale work</td><td class="num">6</td><td class="num">0</td><td class="num">6</td></tr>
+    <tr><td>Excessive current-status age</td><td class="num">4</td><td class="num">13</td><td class="num">17</td></tr>
+    <tr><td>Unassigned open work</td><td class="num">4</td><td class="num">10</td><td class="num">14</td></tr>
+    <tr><td>Overdue unresolved work</td><td class="num">4</td><td class="num">4</td><td class="num">8</td></tr>
+    <tr><td>Stale open work</td><td class="num">0</td><td class="num">15</td><td class="num">15</td></tr>
+  </tbody>
+</table>
+
+<h2>Findings by assignee</h2>
+<table>
+  <thead><tr><th>Assignee</th><th class="num">High</th><th class="num">Warning</th><th class="num">Total</th></tr></thead>
+  <tbody>
+    <tr><td>Unassigned</td><td class="num">7</td><td class="num">15</td><td class="num">22</td></tr>
+    <tr><td>N. Phiri</td><td class="num">3</td><td class="num">7</td><td class="num">10</td></tr>
+    <tr><td>S. Zulu</td><td class="num">3</td><td class="num">5</td><td class="num">8</td></tr>
+    <tr><td>T. Banda</td><td class="num">3</td><td class="num">5</td><td class="num">8</td></tr>
+    <tr><td>K. Mwale</td><td class="num">2</td><td class="num">10</td><td class="num">12</td></tr>
+  </tbody>
+</table>
+<p class="sub">Grouped to show where work is concentrated, not to rank individuals. Unassigned
+work appears as its own row and is usually the first thing to fix.</p>
+
+<h2>Methodology</h2>
+<h3>Unassigned open work</h3>
+<p>Open issues with no assignee. Nobody is individually accountable for the work.
+</p>
+<h3>Overdue unresolved work</h3>
+<p>Open issues whose due date has passed. Counted in calendar days in the configured display timezone; an issue due today is not overdue.
+</p>
+<h3>Stale open work</h3>
+<p>Open issues with no recorded Jira activity beyond the stale threshold. An inactivity signal, not proof that work has stopped.
+</p>
+<h3>High-priority stale work</h3>
+<p>Issues at a configured high priority with no recorded activity beyond the tighter high-priority threshold.
+</p>
+<h3>Excessive current-status age</h3>
+<p>Open issues that have remained in their current working status beyond the threshold, measured from the latest status transition in the changelog.
+</p>
+<h3>How ages are counted</h3>
+<ul class="notes">
+  <li>All ages are counted in whole calendar days in the display timezone shown under Scan metadata — not business days, and not an SLA calendar.</li>
+  <li>Thresholds are exclusive: at a 30-day stale threshold, an issue last updated exactly 30 days ago is not reported; 31 days is.</li>
+  <li>An issue due today is not overdue.</li>
+  <li>Jira&#39;s &#39;updated&#39; field moves for automation runs and administrative edits that represent no human progress, and does not move when someone works on an issue without touching it. Treat the stale checks as inactivity signals, not proof.</li>
+  <li>Current-status age is measured from the most recent status transition in the issue&#39;s changelog. Where an issue has never transitioned, it is measured from the creation date instead.</li>
+  <li>Issues sitting in a backlog status such as &#39;To Do&#39; will be reported for status age once they pass the threshold. If a long-lived backlog is normal here, add that status to the excluded list so the report shows work that is genuinely stuck in flight rather than work that has not started.</li>
+</ul>
+
+<h2>Limitations</h2>
+<ul class="notes">
+  <li>Findings cover only the issues the authenticated account can browse. Issue-level security or project permissions may hide work from this scan entirely.</li>
+  <li>JiraLens is read-only. It made no change to any issue, field, workflow or configuration while producing this report.</li>
+  <li>Issue descriptions, comments, attachments and worklogs are never retrieved, so none of that content appears here and none of it was held in memory.</li>
+  <li>There is no health score. A single number would depend on arbitrary weights and would read as more precise than the underlying data supports.</li>
+</ul>
+<h3>Notes recorded during this scan</h3>
+<ul class="notes">
+  <li>Results cover only the issues the authenticated account is permitted to browse. Issue-level security or project permissions may hide work from this scan.</li>
+  <li>25 issue(s) have no recorded status transition; their status age is measured from the creation date instead.</li>
+  <li>Statuses excluded from the current-status-age check: To Do, Waiting for Customer.</li>
+</ul>
+
+<h2>Scan metadata</h2>
+<dl class="meta">
+  <dt>Scan ID</dt><dd>20261104-DEMO-103000</dd>
+  <dt>Project</dt><dd>DEMO</dd>
+  <dt>Started</dt><dd>2026-11-04T10:30:00+02:00</dd>
+  <dt>Completed</dt><dd>2026-11-04T10:30:00+02:00</dd>
+  <dt>Elapsed</dt><dd>0.00 seconds</dd>
+  <dt>Issues scanned</dt><dd>60</dd>
+  <dt>Findings</dt><dd>60</dd>
+  <dt>Source</dt><dd>demo</dd>
+</dl>
+
+<footer>
+  Produced by JiraLens — a read-only Jira Cloud project health auditor.
+  This report contains no credentials, and no issue descriptions, comments,
+  attachments or worklogs were retrieved to build it.
+</footer>
+
+</body>
+</html>

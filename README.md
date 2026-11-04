@@ -40,17 +40,31 @@ audit engine runs end to end against synthetic data today:
 - **Phase 2** — the five checks behind an `AuditCheck` protocol with a central registry.
 - **Phase 3** — `run_scan` orchestration returning a complete `ScanResult`, with
   progress stages and honest handling of missing status history.
-- **Phases 4–8** — CSV/HTML/JSON reports, CLI exports, the read-only Jira client, and
-  the Streamlit dashboard. See `CHANGELOG.md`.
+- **Phase 4** — CSV, JSON and HTML exporters, all driven from one `ScanResult`.
+- **Phases 6–8** — the read-only Jira client and the Streamlit dashboard. See
+  `CHANGELOG.md`.
 
 ```
-$ jiralens demo --exclude-status "Waiting for Customer" --top 5
-Scan 20261104-DEMO-180540
+$ jiralens demo --exclude-status "To Do" --output reports/demo
+Scan 20261104-DEMO-103000
   Issues scanned             60
-  Findings                   77   (20 high, 57 warning)
-  Issues with findings       50
-  Issues with no findings    10
+  Findings                   60   (18 high, 42 warning)
+  Issues with findings       47
+  Issues with no findings    13
+
+Reports written
+  csv   reports/demo/20261104-DEMO-103000-findings.csv
+  json  reports/demo/20261104-DEMO-103000-summary.json
+  html  reports/demo/20261104-DEMO-103000-report.html
 ```
+
+## Sample output
+
+`sample_reports/` contains real output from the synthetic dataset — open
+[`example-report.html`](sample_reports/example-report.html) to see the executive
+report, or the CSV and JSON beside it. They are generated at a fixed instant by
+`scripts/generate_sample_reports.py`, so regeneration is byte-identical and a diff
+always means a deliberate change.
 
 ## Quick start
 
