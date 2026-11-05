@@ -8,11 +8,37 @@ message instead of a traceback.
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
+import httpx
 import pytest
+import respx
 from streamlit.testing.v1 import AppTest
 
 APP = Path(__file__).resolve().parents[1] / "streamlit_app.py"
+LIVE_SITE = "https://sandbox.atlassian.net"
+
+
+def _live_issue(n: int) -> dict[str, Any]:
+    """A minimal well-formed Jira payload for the live-mode tests."""
+    return {
+        "id": str(10000 + n),
+        "key": f"ITS-{n}",
+        "fields": {
+            "summary": f"Issue {n}",
+            "issuetype": {"name": "Task"},
+            "project": {"key": "ITS"},
+            "status": {"name": "In Progress", "statusCategory": {"key": "indeterminate"}},
+            "assignee": None,
+            "priority": {"name": "Medium"},
+            "created": "2026-08-01T08:00:00.000+0200",
+            "updated": "2026-09-01T08:00:00.000+0200",
+            "duedate": None,
+            "resolution": None,
+            "resolutiondate": None,
+        },
+    }
+
 
 CREDENTIAL_ENV = ("JIRA_BASE_URL", "JIRA_EMAIL", "JIRA_API_TOKEN", "JIRALENS_DEMO_MODE")
 
@@ -225,19 +251,75 @@ class TestLiveMode:
         errors = " ".join(str(e.value) for e in at.error)
         assert "JIRA_BASE_URL" in errors
 
-    def test_live_mode_with_credentials_explains_the_client_is_not_built_yet(
+    @staticmethod
+    def _credentials(monkeypatch: pytest.MonkeyPatch, token: str = "token-value-123456") -> None:
+        monkeypatch.setenv("JIRA_BASE_URL", LIVE_SITE)
+        monkeypatch.setenv("JIRA_EMAIL", "a@b.com")
+        monkeypatch.setenv("JIRA_API_TOKEN", token)
+
+    @respx.mock
+    def test_live_mode_runs_a_scan_through_the_same_engine_as_demo(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        monkeypatch.setenv("JIRA_BASE_URL", "https://acme.atlassian.net")
-        monkeypatch.setenv("JIRA_EMAIL", "a@b.com")
-        monkeypatch.setenv("JIRA_API_TOKEN", "token-value-123456")
+        """The source seam is the only difference between demo and live."""
+        self._credentials(monkeypatch)
+        respx.get(f"{LIVE_SITE}/rest/api/3/project/ITS").mock(
+            return_value=httpx.Response(200, json={"id": "1", "key": "ITS", "name": "IT"})
+        )
+        respx.post(f"{LIVE_SITE}/rest/api/3/search/jql").mock(
+            return_value=httpx.Response(200, json={"issues": [_live_issue(1), _live_issue(2)]})
+        )
+        respx.post(f"{LIVE_SITE}/rest/api/3/changelog/bulkfetch").mock(
+            return_value=httpx.Response(200, json={"issueChangeLogs": []})
+        )
+
         at = _app()
         at.run()
-        at.radio(key="mode").set_value("Live Jira")
+        # The project input only exists in live mode, so rerun before reaching for it.
+        at.radio(key="mode").set_value("Live Jira").run()
+        at.text_input(key="project").set_value("ITS")
         at.button(key="run").click().run()
+
+        assert not at.exception, at.exception
+        labels = {m.label: m.value for m in at.metric}
+        assert labels["Issues scanned"] == "2"
+        assert len(at.dataframe[1].value) == 2
+
+    @respx.mock
+    def test_an_unreachable_site_renders_a_message_not_a_traceback(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        self._credentials(monkeypatch)
+        respx.get(f"{LIVE_SITE}/rest/api/3/project/ITS").mock(
+            side_effect=httpx.ConnectError("no route to host")
+        )
+        at = _app()
+        at.run()
+        # The project input only exists in live mode, so rerun before reaching for it.
+        at.radio(key="mode").set_value("Live Jira").run()
+        at.text_input(key="project").set_value("ITS")
+        at.button(key="run").click().run()
+
         assert not at.exception
         errors = " ".join(str(e.value) for e in at.error)
-        assert "not implemented yet" in errors
+        assert "could not reach Jira" in errors
+
+    @respx.mock
+    def test_rejected_credentials_are_explained_in_plain_language(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        self._credentials(monkeypatch)
+        respx.get(f"{LIVE_SITE}/rest/api/3/project/ITS").mock(return_value=httpx.Response(401))
+        at = _app()
+        at.run()
+        # The project input only exists in live mode, so rerun before reaching for it.
+        at.radio(key="mode").set_value("Live Jira").run()
+        at.text_input(key="project").set_value("ITS")
+        at.button(key="run").click().run()
+
+        assert not at.exception
+        errors = " ".join(str(e.value) for e in at.error)
+        assert "rejected the supplied credentials" in errors
 
     def test_no_credential_is_ever_rendered(self, monkeypatch: pytest.MonkeyPatch) -> None:
         token = "ATATT-super-secret-value-0987654321"

@@ -105,14 +105,34 @@ jiralens version
 jiralens demo          # runs against synthetic data, no credentials needed
 ```
 
-## Configuration
+## Live Jira mode
 
 ```bash
-cp .env.example .env   # then edit .env locally — it is gitignored
+cp .env.example .env     # gitignored
+jiralens connection-test
+jiralens scan --project ITS --output reports/its
 ```
 
-`JIRA_API_TOKEN` is created at
+Create the token at
 [id.atlassian.com](https://id.atlassian.com/manage-profile/security/api-tokens).
+Atlassian offers two kinds, and they are **not** called the same way:
+
+| | Classic (unscoped) | Scoped (recommended) |
+|---|---|---|
+| API base | your site URL | `api.atlassian.com/ex/jira/{cloudId}` |
+| `JIRA_CLOUD_ID` | leave blank | required |
+| Permissions | everything the account can do | only the scopes you grant |
+
+Scoping a token to `read:jira-work` means the credential itself cannot write —
+a stronger guarantee than an endpoint allowlist alone, and the one worth using.
+Find your cloud ID at `https://<your-site>.atlassian.net/_edge/tenant_info`.
+
+Mismatching the two produces a `401` that looks like a bad token, so the error
+message for that case names `JIRA_CLOUD_ID` explicitly.
+
+Tokens expire — 1 to 365 days, defaulting to a year — so a scheduled scan will
+eventually stop working unless you diary the renewal.
+
 The token is never accepted as a command-line argument, because shell history
 retains it, and it is held as a `SecretStr` so it cannot surface through a `repr`,
 a traceback or a logged model dump.

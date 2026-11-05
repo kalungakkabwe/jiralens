@@ -31,7 +31,8 @@ from jiralens.dashboard import (
     issues_dataframe,
     max_age,
 )
-from jiralens.exceptions import ConfigurationError, JiraLensError
+from jiralens.exceptions import JiraLensError
+from jiralens.jira.client import JiraClient
 from jiralens.models import ScanConfig, ScanResult
 from jiralens.reports.csv_report import build_dataframe
 from jiralens.reports.html_report import LIMITATIONS, METHODOLOGY_NOTES, render_html
@@ -39,6 +40,7 @@ from jiralens.reports.json_report import build_summary
 from jiralens.scanner import ScanProgress, run_scan
 from jiralens.sources import IssueSource
 from jiralens.sources.demo import DEMO_PROJECT_KEY, DemoIssueSource
+from jiralens.sources.jira_source import JiraIssueSource
 
 DEMO = "Demo (synthetic data)"
 LIVE = "Live Jira"
@@ -54,13 +56,17 @@ st.set_page_config(page_title="JiraLens", page_icon="🔎", layout="wide")
 
 
 def build_source(mode: str, settings: Settings, now: datetime) -> IssueSource:
+    """Pick the source. The only place in this file that knows live mode exists."""
     if mode == DEMO:
         return DemoIssueSource(now=now)
     settings.require_live()  # raises a readable ConfigurationError when unset
-    raise ConfigurationError(
-        "The live Jira client is not implemented yet (Phase 6/7). Credentials are "
-        "configured correctly — switch to demo mode to explore the dashboard."
-    )
+    # The client is kept on session state so its connection pool survives a rerun
+    # rather than being rebuilt on every widget interaction.
+    client = st.session_state.get("jira_client")
+    if client is None:
+        client = JiraClient(settings)
+        st.session_state["jira_client"] = client
+    return JiraIssueSource(client)
 
 
 def execute_scan(mode: str, config: ScanConfig, settings: Settings) -> ScanResult:

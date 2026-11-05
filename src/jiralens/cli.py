@@ -17,11 +17,13 @@ from rich.table import Table
 from jiralens import __version__
 from jiralens.config import load_settings
 from jiralens.exceptions import JiraLensError
+from jiralens.jira.client import JiraClient
 from jiralens.logging_config import configure_logging
 from jiralens.models import ScanConfig, ScanResult
 from jiralens.reports import ALL_FORMATS, write_reports
 from jiralens.scanner import ScanProgress, findings_by_check, run_scan
 from jiralens.sources.demo import DEMO_PROJECT_KEY, DemoIssueSource
+from jiralens.sources.jira_source import JiraIssueSource
 
 app = typer.Typer(
     add_completion=False,
@@ -130,11 +132,25 @@ def connection_test() -> None:
     try:
         settings = load_settings()
         configure_logging(settings.jiralens_log_level, settings.secret_values())
-        settings.require_live()
+        with JiraClient(settings) as client:
+            user = client.test_connection()
+            info = client.get_server_info()
     except JiraLensError as exc:
-        _fail(exc)
-    err_console.print("[yellow]Not implemented yet — Phase 6 (read-only Jira client).[/]")
-    raise typer.Exit(code=1)
+        err_console.print("[bold red]Connection failed[/]")
+        err_console.print(f"Reason: {exc}")
+        err_console.print("[dim]No data was retrieved.[/]")
+        raise typer.Exit(code=exc.exit_code) from None
+
+    table = Table(show_header=False, title="Connection successful", title_justify="left")
+    table.add_column("Field")
+    table.add_column("Value")
+    table.add_row("Site", info.server_title or settings.site_url or "—")
+    table.add_row("API base", settings.api_base_url or "—")
+    table.add_row("Token type", "scoped" if settings.uses_scoped_token else "unscoped (classic)")
+    table.add_row("Authenticated as", user.display_name)
+    table.add_row("Account type", user.account_type or "—")
+    table.add_row("Read-only mode", "enabled")
+    console.print(table)
 
 
 @app.command()
@@ -157,8 +173,7 @@ def scan(
     try:
         settings = load_settings()
         configure_logging(settings.jiralens_log_level, settings.secret_values())
-        settings.require_live()
-        _build_config(
+        config = _build_config(
             project,
             jql=jql,
             stale_days=stale_days,
@@ -168,13 +183,20 @@ def scan(
             timezone=settings.jiralens_timezone,
             no_changelog=no_changelog,
         )
+        now = datetime.now(tz=config.tzinfo)
+        with JiraClient(settings) as client:
+            result = run_scan(
+                JiraIssueSource(client),
+                config,
+                now=now,
+                on_progress=lambda p: err_console.print(f"[dim]{p}[/]"),
+            )
+        written = write_reports(result, output) if output else {}
     except JiraLensError as exc:
         _fail(exc)
-    err_console.print(
-        f"[yellow]Not implemented yet — Phase 7 (live Jira source). Configuration "
-        f"validated; reports would be written to {output!r}, and --top {top} applied.[/]"
-    )
-    raise typer.Exit(code=1)
+
+    _render_result(result, top=top)
+    _render_written(written)
 
 
 @app.command()

@@ -30,11 +30,25 @@ POST /rest/api/3/search/jql
 POST /rest/api/3/changelog/bulkfetch
 ```
 
-The last two are POST but are retrieval operations. The client refuses any request
-whose method is not GET or POST, or whose path is not on the allowlist, raising
-`ReadOnlyViolationError`. No `create_issue`, `update_issue`, `transition_issue`,
-`add_comment` or `delete_issue` method exists, and a test asserts that a complete
-scan emits no PUT, PATCH or DELETE.
+The last two are POST but are retrieval operations — Jira uses POST so a long JQL
+string or a thousand issue ids fit in a body rather than a URL.
+
+Enforcement is in code, not in this document. Every request passes through a single
+`_request` method that refuses any verb outside GET/POST and any path not matching
+`READ_ONLY_ENDPOINTS`, raising `ReadOnlyViolationError`. No `create_issue`,
+`update_issue`, `transition_issue`, `add_comment` or `delete_issue` method exists.
+
+Three tests back that up: one asserts none of those method names is on the client's
+public surface, one asserts the allowlist holds exactly five operations so widening
+it is a deliberate change, and one runs a complete scan with a catch-all route
+registered for PUT, PATCH and DELETE and asserts it was never called.
+
+### Prefer a scoped token
+
+Atlassian's scoped API tokens let you grant `read:jira-work` and nothing else, so the
+credential cannot write even if the code tried. Set `JIRA_CLOUD_ID` to use one. This
+is defence in depth: the allowlist stops JiraLens writing, and the token scope stops
+anything holding that token writing.
 
 ## Data minimisation
 

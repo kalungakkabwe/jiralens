@@ -6,6 +6,7 @@ pydantic validation errors, tracebacks or logged model dumps.
 
 from __future__ import annotations
 
+import re
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from pydantic import Field, SecretStr, field_validator
@@ -15,6 +16,11 @@ from jiralens.exceptions import ConfigurationError
 
 DEFAULT_TIMEZONE = "Africa/Lusaka"
 LOG_LEVELS = frozenset({"CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"})
+
+#: Scoped API tokens are called through Atlassian's gateway, not the site URL.
+ATLASSIAN_GATEWAY = "https://api.atlassian.com"
+
+UUID_PATTERN = re.compile(r"[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}")
 
 
 class Settings(BaseSettings):
@@ -27,10 +33,19 @@ class Settings(BaseSettings):
         case_sensitive=False,
     )
 
+    #: The Jira *site* URL, e.g. https://acme.atlassian.net. Always required: issue
+    #: links in every report are built from it, whichever token type is in use.
     jira_base_url: str | None = None
     jira_email: str | None = None
     jira_api_token: SecretStr | None = None
     jira_default_project: str = "DEMO"
+
+    #: Set when using a **scoped** API token. Scoped tokens are called through
+    #: Atlassian's gateway at api.atlassian.com/ex/jira/{cloudId} rather than the site
+    #: URL, so the API base and the site URL are two different things. Leave unset for
+    #: a classic unscoped token, which is called against the site URL directly.
+    #: Find it at https://<your-site>.atlassian.net/_edge/tenant_info
+    jira_cloud_id: str | None = None
 
     jiralens_timezone: str = DEFAULT_TIMEZONE
     jiralens_log_level: str = "INFO"
@@ -54,6 +69,21 @@ class Settings(BaseSettings):
             )
         return url
 
+    @field_validator("jira_cloud_id")
+    @classmethod
+    def _validate_cloud_id(cls, value: str | None) -> str | None:
+        if value is None or not value.strip():
+            return None
+        cloud_id = value.strip()
+        # A cloudId is a UUID. Catching a pasted URL or site name here produces a
+        # useful message instead of a 404 from the gateway three calls later.
+        if not UUID_PATTERN.fullmatch(cloud_id):
+            raise ValueError(
+                f"JIRA_CLOUD_ID must be a UUID, not {cloud_id!r}. Find yours at "
+                "https://<your-site>.atlassian.net/_edge/tenant_info"
+            )
+        return cloud_id
+
     @field_validator("jiralens_timezone")
     @classmethod
     def _validate_timezone(cls, value: str) -> str:
@@ -76,6 +106,31 @@ class Settings(BaseSettings):
     @property
     def tzinfo(self) -> ZoneInfo:
         return ZoneInfo(self.jiralens_timezone)
+
+    @property
+    def uses_scoped_token(self) -> bool:
+        """True when a cloud id is configured, meaning calls route via the gateway."""
+        return self.jira_cloud_id is not None
+
+    @property
+    def api_base_url(self) -> str | None:
+        """Where REST calls go.
+
+        Scoped tokens are rejected by the site URL and unscoped tokens are rejected
+        by the gateway, so getting this wrong produces a 401 that looks like a bad
+        credential. The cloud id is what distinguishes the two.
+        """
+        if self.jira_base_url is None:
+            return None
+        if self.jira_cloud_id is None:
+            return self.jira_base_url
+        return f"{ATLASSIAN_GATEWAY}/ex/jira/{self.jira_cloud_id}"
+
+    @property
+    def site_url(self) -> str | None:
+        """Where humans go. Issue links in reports are built from this, never from
+        ``api_base_url`` — a gateway URL would produce dead links."""
+        return self.jira_base_url
 
     def secret_values(self) -> list[str]:
         """Literal strings that must never reach a log line or a report."""
@@ -127,4 +182,4 @@ def load_settings(**overrides: object) -> Settings:
         raise ConfigurationError(f"Invalid configuration: {exc}") from exc
 
 
-__all__ = ["DEFAULT_TIMEZONE", "Settings", "load_settings"]
+__all__ = ["ATLASSIAN_GATEWAY", "DEFAULT_TIMEZONE", "Settings", "load_settings"]
