@@ -32,7 +32,7 @@ from jiralens.jira.client import (
 SITE = "https://sandbox.atlassian.net"
 GATEWAY = "https://api.atlassian.com"
 CLOUD_ID = "00000000-1111-2222-3333-444444444444"
-TOKEN = "ATATT-secret-token-value-abcdefghij"
+TOKEN = "fake-test-token-not-a-real-credential-abcdef"
 
 
 def settings(**kw: Any) -> Settings:

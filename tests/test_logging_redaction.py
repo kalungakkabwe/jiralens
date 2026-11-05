@@ -9,7 +9,7 @@ import pytest
 
 from jiralens.logging_config import REDACTED, RedactingFilter, configure_logging
 
-TOKEN = "ATATT3xFfGF0abcdefghijklmnopqrstuvwxyz1234567890"
+TOKEN = "fake-test-token-not-a-real-credential-0123456789"
 
 
 @pytest.fixture

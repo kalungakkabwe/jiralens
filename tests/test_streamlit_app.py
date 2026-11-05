@@ -322,7 +322,7 @@ class TestLiveMode:
         assert "rejected the supplied credentials" in errors
 
     def test_no_credential_is_ever_rendered(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        token = "ATATT-super-secret-value-0987654321"
+        token = "fake-test-token-not-a-real-credential-987654"
         monkeypatch.setenv("JIRA_BASE_URL", "https://acme.atlassian.net")
         monkeypatch.setenv("JIRA_EMAIL", "a@b.com")
         monkeypatch.setenv("JIRA_API_TOKEN", token)
