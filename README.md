@@ -29,8 +29,9 @@ Jira sites rename these freely.
 
 ## Build status
 
-This repository is being built in phases. Phases 0 to 3 are complete, so the full
-audit engine runs end to end against synthetic data today:
+The MVP is feature-complete: live Jira scans, demo scans, all three report formats
+and the dashboard all work. What remains before v0.1.0 is release mechanics — branch
+ruleset, issue backlog, tag.
 
 - **Phase 0** — packaging, validated configuration, exception hierarchy, logging with
   credential redaction, CI.
@@ -41,10 +42,13 @@ audit engine runs end to end against synthetic data today:
 - **Phase 3** — `run_scan` orchestration returning a complete `ScanResult`, with
   progress stages and honest handling of missing status history.
 - **Phase 4** — CSV, JSON and HTML exporters, all driven from one `ScanResult`.
+- **Phases 6 and 7** — the read-only Jira client (endpoint allowlist, retry and
+  `Retry-After` handling, token pagination, bulk changelog retrieval) and the live
+  issue source.
 - **Phase 8** — the Streamlit dashboard: overview, filterable findings, issue
   explorer and methodology.
-- **Phases 6–7** — the read-only Jira client, so live scans work as well as demo
-  scans. See `CHANGELOG.md`.
+
+See `CHANGELOG.md` for what each phase pinned and why.
 
 ## Dashboard
 
@@ -95,15 +99,38 @@ report, or the CSV and JSON beside it. They are generated at a fixed instant by
 `scripts/generate_sample_reports.py`, so regeneration is byte-identical and a diff
 always means a deliberate change.
 
+## Requirements
+
+- **Python 3.12 or newer.** Check with `python3 --version` before anything else.
+  macOS ships 3.9 as its system Python, and Debian/Ubuntu LTS often ship 3.10 — on
+  either, install a newer Python first rather than using the system one. The
+  [python.org macOS installer](https://www.python.org/downloads/macos/) is the least
+  troublesome route on a Mac; it needs no compiler and no Homebrew.
+- **pip 21.3 or newer.** This project uses a hatchling backend, and editable installs
+  with a non-setuptools backend need PEP 660 support. An older pip fails with
+  *"Directory cannot be installed in editable mode"*. The install step below upgrades
+  pip first, which avoids it.
+
 ## Quick start
 
 ```bash
-python3 -m venv .venv && source .venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
+python --version
+```
+
+Confirm that prints 3.12 or newer before continuing — a venv built on an older
+interpreter fails at the install step rather than here.
+
+```bash
+python -m pip install --upgrade pip
 pip install -e ".[dev]"
 pytest
-jiralens version
-jiralens demo          # runs against synthetic data, no credentials needed
+jiralens demo
 ```
+
+`jiralens demo` runs the complete audit against the bundled synthetic dataset with no
+credentials, so a findings table there means the whole pipeline works.
 
 ## Live Jira mode
 

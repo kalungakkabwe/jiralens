@@ -252,7 +252,7 @@ def demo(
     _render_written(written)
     if not written:
         console.print("\n[dim]Pass --output DIR to write the CSV, HTML and JSON reports.[/]")
-    console.print("[yellow]The interactive dashboard arrives in Phase 8.[/]")
+    console.print("[dim]For the interactive dashboard: streamlit run streamlit_app.py[/]")
 
 
 if __name__ == "__main__":  # pragma: no cover
