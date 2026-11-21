@@ -146,7 +146,13 @@ def connection_test() -> None:
     table.add_column("Value")
     table.add_row("Site", info.server_title or settings.site_url or "—")
     table.add_row("API base", settings.api_base_url or "—")
-    table.add_row("Token type", "scoped" if settings.uses_scoped_token else "unscoped (classic)")
+    token_kind = (
+        "service account"
+        if settings.uses_service_account_token
+        else ("scoped" if settings.uses_scoped_token else "unscoped (classic)")
+    )
+    table.add_row("Token type", token_kind)
+    table.add_row("Auth scheme", settings.auth_scheme)
     table.add_row("Authenticated as", user.display_name)
     table.add_row("Account type", user.account_type or "—")
     table.add_row("Read-only mode", "enabled")

@@ -387,3 +387,159 @@ class TestRetryAfterParsing:
     def test_a_negative_value_is_floored_at_zero(self) -> None:
         response = httpx.Response(429, headers={"Retry-After": "-5"})
         assert _retry_after_seconds(response) == 0.0
+
+
+# ---------------------------------------------------------------------------
+# Service account tokens (Bearer auth)
+# ---------------------------------------------------------------------------
+
+SERVICE_TOKEN = "ATST" + "x" * 188
+
+
+class TestAuthSchemeSelection:
+    def test_a_classic_token_uses_basic(self) -> None:
+        s = settings()
+        assert s.uses_service_account_token is False
+        assert s.auth_scheme == "basic"
+
+    def test_a_service_account_token_uses_bearer(self) -> None:
+        s = settings(jira_api_token=SERVICE_TOKEN, jira_cloud_id=CLOUD_ID)
+        assert s.uses_service_account_token is True
+        assert s.auth_scheme == "bearer"
+
+    @pytest.mark.parametrize("override", ["basic", "bearer"])
+    def test_an_explicit_override_wins_over_detection(self, override: str) -> None:
+        s = settings(
+            jira_api_token=SERVICE_TOKEN, jira_cloud_id=CLOUD_ID, jira_auth_scheme=override
+        )
+        assert s.auth_scheme == override
+
+    def test_an_unknown_scheme_is_rejected(self) -> None:
+        with pytest.raises(ValueError, match="JIRA_AUTH_SCHEME"):
+            settings(jira_auth_scheme="ntlm")
+
+    def test_no_token_is_not_treated_as_a_service_account(self) -> None:
+        assert settings(jira_api_token=None).uses_service_account_token is False
+
+
+class TestServiceAccountRequirements:
+    def test_bearer_does_not_require_an_email(self) -> None:
+        """The email plays no part in Bearer auth, so demanding one sends people
+        hunting for a value that changes nothing."""
+        s = settings(jira_api_token=SERVICE_TOKEN, jira_cloud_id=CLOUD_ID, jira_email=None)
+        api_base, email, token = s.require_live()
+        assert api_base == f"{GATEWAY}/ex/jira/{CLOUD_ID}"
+        assert email is None
+        assert token.get_secret_value() == SERVICE_TOKEN
+
+    def test_basic_still_requires_an_email(self) -> None:
+        from jiralens.exceptions import ConfigurationError
+
+        with pytest.raises(ConfigurationError, match="JIRA_EMAIL"):
+            settings(jira_email=None).require_live()
+
+    def test_a_service_account_token_without_a_cloud_id_is_refused_up_front(self) -> None:
+        """Atlassian only accepts these through the gateway, so this would be a 401
+        that reads exactly like a mistyped token."""
+        from jiralens.exceptions import ConfigurationError
+
+        with pytest.raises(ConfigurationError, match="service account"):
+            settings(jira_api_token=SERVICE_TOKEN, jira_cloud_id=None).require_live()
+
+    def test_that_refusal_names_the_variable_and_where_to_find_it(self) -> None:
+        from jiralens.exceptions import ConfigurationError
+
+        with pytest.raises(ConfigurationError) as exc:
+            settings(jira_api_token=SERVICE_TOKEN, jira_cloud_id=None).require_live()
+        assert "JIRA_CLOUD_ID" in str(exc.value)
+        assert "tenant_info" in str(exc.value)
+
+
+class TestBearerOnTheWire:
+    @respx.mock
+    def test_it_sends_an_authorization_bearer_header(self) -> None:
+        route = respx.get(f"{GATEWAY}/ex/jira/{CLOUD_ID}/rest/api/3/myself").mock(
+            return_value=httpx.Response(200, json={"accountId": "a", "displayName": "svc"})
+        )
+        client = JiraClient(
+            settings(jira_api_token=SERVICE_TOKEN, jira_cloud_id=CLOUD_ID, jira_email=None),
+            sleep=lambda _s: None,
+        )
+        client.test_connection()
+        assert route.calls.last.request.headers["authorization"] == f"Bearer {SERVICE_TOKEN}"
+
+    @respx.mock
+    def test_it_does_not_also_send_basic(self) -> None:
+        route = respx.get(f"{GATEWAY}/ex/jira/{CLOUD_ID}/rest/api/3/myself").mock(
+            return_value=httpx.Response(200, json={"accountId": "a", "displayName": "svc"})
+        )
+        JiraClient(
+            settings(jira_api_token=SERVICE_TOKEN, jira_cloud_id=CLOUD_ID), sleep=lambda _s: None
+        ).test_connection()
+        assert not route.calls.last.request.headers["authorization"].startswith("Basic")
+
+    @respx.mock
+    def test_a_classic_token_still_sends_basic(self, client: JiraClient) -> None:
+        route = respx.get(f"{SITE}/rest/api/3/myself").mock(
+            return_value=httpx.Response(200, json={"accountId": "a", "displayName": "d"})
+        )
+        client.test_connection()
+        assert route.calls.last.request.headers["authorization"].startswith("Basic ")
+
+    @respx.mock
+    def test_a_full_bearer_scan_reaches_the_gateway_paths(self) -> None:
+        base = f"{GATEWAY}/ex/jira/{CLOUD_ID}"
+        respx.get(f"{base}/rest/api/3/project/ITS").mock(
+            return_value=httpx.Response(200, json={"id": "1", "key": "ITS", "name": "IT"})
+        )
+        search = respx.post(f"{base}/rest/api/3/search/jql").mock(
+            return_value=httpx.Response(200, json={"issues": []})
+        )
+        bulk = respx.post(f"{base}/rest/api/3/changelog/bulkfetch").mock(
+            return_value=httpx.Response(200, json={"issueChangeLogs": []})
+        )
+        c = JiraClient(
+            settings(jira_api_token=SERVICE_TOKEN, jira_cloud_id=CLOUD_ID), sleep=lambda _s: None
+        )
+        c.get_project("ITS")
+        c.search_issues("project = ITS", ["status"])
+        c.get_status_changelogs(["10001"])
+        assert search.called and bulk.called
+
+    @respx.mock
+    def test_the_bearer_token_never_appears_in_an_error(self) -> None:
+        respx.get(f"{GATEWAY}/ex/jira/{CLOUD_ID}/rest/api/3/myself").mock(
+            return_value=httpx.Response(401, text=f"leaked {SERVICE_TOKEN}")
+        )
+        c = JiraClient(
+            settings(jira_api_token=SERVICE_TOKEN, jira_cloud_id=CLOUD_ID), sleep=lambda _s: None
+        )
+        with pytest.raises(AuthenticationError) as exc:
+            c.test_connection()
+        assert SERVICE_TOKEN not in str(exc.value)
+
+
+class TestSchemeAwareAuthErrors:
+    @respx.mock
+    def test_the_bearer_401_talks_about_scopes_and_the_owning_account(self) -> None:
+        respx.get(f"{GATEWAY}/ex/jira/{CLOUD_ID}/rest/api/3/myself").mock(
+            return_value=httpx.Response(401)
+        )
+        c = JiraClient(
+            settings(jira_api_token=SERVICE_TOKEN, jira_cloud_id=CLOUD_ID), sleep=lambda _s: None
+        )
+        with pytest.raises(AuthenticationError) as exc:
+            c.test_connection()
+        message = str(exc.value)
+        assert "service account" in message
+        assert "read:jira-work" in message
+        assert "JIRA_EMAIL" not in message, "email is irrelevant to bearer auth"
+
+    @respx.mock
+    def test_the_basic_401_points_at_the_service_account_trap(self, client: JiraClient) -> None:
+        respx.get(f"{SITE}/rest/api/3/myself").mock(return_value=httpx.Response(401))
+        with pytest.raises(AuthenticationError) as exc:
+            client.test_connection()
+        message = str(exc.value)
+        assert "JIRA_EMAIL" in message
+        assert "ATST" in message

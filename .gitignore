@@ -33,6 +33,10 @@ htmlcov/
 /logs/
 *.log
 
+# Agent tooling (skills, local agent config) — machine-local, not part of the project
+.agents/
+.claude/
+
 # IDE and OS
 .vscode/
 .idea/

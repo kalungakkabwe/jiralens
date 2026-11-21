@@ -126,29 +126,36 @@ class JiraClient:
         client: httpx.Client | None = None,
         sleep: Callable[[float], None] = time.sleep,
     ) -> None:
-        api_base, email, token = self._credentials(settings)
+        api_base, email, token = settings.require_live()
         self._settings = settings
         self._api_base = api_base
         self._site_url = settings.site_url or api_base
         self._sleep = sleep
         self._max_attempts = settings.max_retry_attempts
+        self._auth_scheme = settings.auth_scheme
         self._owns_client = client is None
+
+        headers = {"Accept": "application/json", "User-Agent": "JiraLens"}
+        auth: tuple[str, str] | None = None
+        if self._auth_scheme == "bearer":
+            # Service-account tokens are Bearer credentials; the email plays no part.
+            headers["Authorization"] = f"Bearer {token.get_secret_value()}"
+        else:
+            assert email is not None  # require_live guarantees it for basic auth
+            auth = (email, token.get_secret_value())
+
         self._client = client or httpx.Client(
             base_url=api_base,
-            auth=(email, token.get_secret_value()),
+            auth=auth,
             timeout=httpx.Timeout(settings.request_timeout_seconds),
-            headers={"Accept": "application/json", "User-Agent": "JiraLens"},
+            headers=headers,
             follow_redirects=False,
         )
 
-    @staticmethod
-    def _credentials(settings: Settings) -> tuple[str, str, Any]:
-        settings.require_live()
-        api_base = settings.api_base_url
-        assert api_base is not None  # require_live guarantees base_url is set
-        assert settings.jira_email is not None
-        assert settings.jira_api_token is not None
-        return api_base, settings.jira_email, settings.jira_api_token
+    @property
+    def auth_scheme(self) -> str:
+        """``bearer`` or ``basic`` — reported by ``connection-test`` for diagnosis."""
+        return self._auth_scheme
 
     # -- lifecycle ---------------------------------------------------------------
 
@@ -245,8 +252,7 @@ class JiraClient:
         self._sleep(delay)
         return min(backoff * 2, MAX_BACKOFF_SECONDS)
 
-    @staticmethod
-    def _raise_for_permanent_status(response: httpx.Response, path: str) -> None:
+    def _raise_for_permanent_status(self, response: httpx.Response, path: str) -> None:
         """Map the answers that retrying cannot change. Never echoes the request body."""
         code = response.status_code
         if code == 400:
@@ -255,12 +261,7 @@ class JiraClient:
                 "If a custom JQL was supplied, check its syntax and field names."
             )
         if code == 401:
-            raise AuthenticationError(
-                "Jira rejected the supplied credentials. Check JIRA_EMAIL and "
-                "JIRA_API_TOKEN in your local .env, and confirm the token has not "
-                "expired. If you are using a scoped token, JIRA_CLOUD_ID must be set; "
-                "if you are using an unscoped one, it must be empty."
-            )
+            raise AuthenticationError(self._auth_failure_hint())
         if code == 403:
             raise JiraPermissionError(
                 "The authenticated account is not permitted to perform this request. "
@@ -271,6 +272,30 @@ class JiraClient:
                 f"Jira could not find {path}. Check the project key, and confirm the "
                 "authenticated account can see that project."
             )
+
+    def _auth_failure_hint(self) -> str:
+        """A 401 message that names the likely cause for the scheme actually in use.
+
+        The two token families fail in opposite ways, and each failure looks like a
+        mistyped credential, so a generic message sends people to check the one thing
+        that is usually fine.
+        """
+        common = "Jira rejected the supplied credentials. "
+        if self._auth_scheme == "bearer":
+            return (
+                common + "This is a service account token, sent as a Bearer credential. "
+                "Confirm the token has not expired, that it was created on the "
+                "account that owns JIRA_CLOUD_ID, and that it carries the "
+                "read:jira-work and read:jira-user scopes — scopes cannot be changed "
+                "after a token is created, only replaced."
+            )
+        return (
+            common + "Check JIRA_EMAIL and JIRA_API_TOKEN in your local .env, and confirm the "
+            "token has not expired. JIRA_EMAIL must be the account that created the "
+            "token. If the token begins with ATST it belongs to a service account and "
+            "needs Bearer auth — set JIRA_CLOUD_ID and JiraLens will switch "
+            "automatically."
+        )
 
     @staticmethod
     def _parse(response: httpx.Response, method: str, path: str) -> Any:
