@@ -15,7 +15,7 @@ from rich.console import Console
 from rich.table import Table
 
 from jiralens import __version__
-from jiralens.config import load_settings
+from jiralens.config import env_file_problems, load_settings
 from jiralens.exceptions import JiraLensError
 from jiralens.jira.client import JiraClient
 from jiralens.logging_config import configure_logging
@@ -34,6 +34,12 @@ console = Console()
 err_console = Console(stderr=True)
 
 SEVERITY_STYLE = {"high": "bold red", "warning": "yellow", "info": "cyan"}
+
+
+def _warn_about_config(path: str = ".env") -> None:
+    """Surface anything in the local .env that would make a later error misleading."""
+    for problem in env_file_problems(path):
+        err_console.print(f"[yellow]Config warning:[/] {problem}")
 
 
 def _fail(exc: JiraLensError) -> None:
@@ -130,6 +136,7 @@ def version() -> None:
 def connection_test() -> None:
     """Confirm credentials against GET /rest/api/3/myself."""
     try:
+        _warn_about_config()
         settings = load_settings()
         configure_logging(settings.jiralens_log_level, settings.secret_values())
         with JiraClient(settings) as client:
@@ -177,6 +184,7 @@ def scan(
 ) -> None:
     """Scan a live Jira project. Requires credentials in .env."""
     try:
+        _warn_about_config()
         settings = load_settings()
         configure_logging(settings.jiralens_log_level, settings.secret_values())
         config = _build_config(
@@ -231,6 +239,7 @@ def demo(
 ) -> None:
     """Run a full audit against the bundled synthetic dataset. No credentials needed."""
     try:
+        _warn_about_config()
         settings = load_settings()
         configure_logging(settings.jiralens_log_level, settings.secret_values())
         config = _build_config(

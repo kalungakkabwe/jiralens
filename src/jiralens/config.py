@@ -6,7 +6,10 @@ pydantic validation errors, tracebacks or logged model dumps.
 
 from __future__ import annotations
 
+import os
 import re
+from collections.abc import Mapping
+from pathlib import Path
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from pydantic import Field, SecretStr, field_validator
@@ -240,4 +243,81 @@ def load_settings(**overrides: object) -> Settings:
         raise ConfigurationError(f"Invalid configuration: {exc}") from exc
 
 
-__all__ = ["ATLASSIAN_GATEWAY", "DEFAULT_TIMEZONE", "Settings", "load_settings"]
+#: Prefixes of settings JiraLens reads, used when scanning for shadowed values.
+_SETTING_PREFIXES = ("JIRA_", "JIRALENS_")
+
+
+def _parse_dotenv(text: str) -> tuple[dict[str, str], list[int]]:
+    """Return the key/value pairs in a .env, plus the line numbers that are neither
+    a comment, a blank, nor a ``KEY=value`` assignment."""
+    values: dict[str, str] = {}
+    malformed: list[int] = []
+    for number, raw in enumerate(text.splitlines(), 1):
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "=" not in line:
+            malformed.append(number)
+            continue
+        key, _, value = line.partition("=")
+        values[key.strip()] = value.strip().strip('"').strip("'")
+    return values, malformed
+
+
+def env_file_problems(
+    path: str | Path = ".env", environ: Mapping[str, str] | None = None
+) -> list[str]:
+    """Describe anything about the local .env that would mislead the next error message.
+
+    Three things have each cost real debugging time:
+
+    * A line with no ``=``. Deleting ``REPLACE_ME`` usually takes the ``KEY=`` with it,
+      leaving a bare credential that the parser silently skips. The tool then reports
+      "credentials rejected" when in fact it sent none.
+    * A placeholder left in place, which fails as though the value were wrong.
+    * An environment variable shadowing the file. Environment wins over ``.env``, so a
+      stale ``export`` from an earlier shell makes edits to the file do nothing at all,
+      and the resulting error points at the file you just corrected.
+
+    Returns a list of human-readable problems; empty means nothing suspicious.
+    """
+    env = os.environ if environ is None else environ
+    file_path = Path(path)
+    problems: list[str] = []
+
+    if not file_path.is_file():
+        return problems
+
+    values, malformed = _parse_dotenv(file_path.read_text(encoding="utf-8"))
+
+    for number in malformed:
+        problems.append(
+            f"{file_path}: line {number} has no '=' so it is being ignored. If you "
+            "pasted a value over a placeholder, the KEY= part was probably deleted "
+            "with it — the value is not reaching JiraLens."
+        )
+
+    for key, value in values.items():
+        if "REPLACE_ME" in value:
+            problems.append(f"{file_path}: {key} is still set to a placeholder.")
+
+    for key, value in values.items():
+        if not key.startswith(_SETTING_PREFIXES):
+            continue
+        shadow = env.get(key)
+        if shadow is not None and shadow != value:
+            problems.append(
+                f"{key} is set in your shell environment and overrides {file_path}, "
+                "so editing the file has no effect. Unset it, or start a new terminal."
+            )
+
+    return problems
+
+
+__all__ = [
+    "ATLASSIAN_GATEWAY",
+    "DEFAULT_TIMEZONE",
+    "Settings",
+    "env_file_problems",
+    "load_settings",
+]

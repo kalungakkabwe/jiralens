@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
-from jiralens.config import Settings, load_settings
+from jiralens.config import Settings, env_file_problems, load_settings
 from jiralens.exceptions import ConfigurationError
 
 TOKEN = "super-secret-token-value-123456"
@@ -120,3 +122,80 @@ class TestTokenNeverLeaks:
 
     def test_secret_values_is_empty_without_a_token(self) -> None:
         assert _settings().secret_values() == []
+
+
+# ---------------------------------------------------------------------------
+# .env problems that would otherwise produce a misleading error
+# ---------------------------------------------------------------------------
+
+
+class TestEnvFileProblems:
+    """Each case here cost real debugging time before this check existed."""
+
+    def _write(self, tmp_path: Path, body: str) -> Path:
+        path = tmp_path / ".env"
+        path.write_text(body, encoding="utf-8")
+        return path
+
+    def test_a_clean_file_reports_nothing(self, tmp_path: Path) -> None:
+        path = self._write(
+            tmp_path,
+            "# a comment\nJIRA_BASE_URL=https://x.atlassian.net\nJIRA_EMAIL=a@b.com\n",
+        )
+        assert env_file_problems(path, environ={}) == []
+
+    def test_a_missing_file_reports_nothing(self, tmp_path: Path) -> None:
+        assert env_file_problems(tmp_path / "nope.env", environ={}) == []
+
+    def test_a_bare_line_is_flagged_with_its_line_number(self, tmp_path: Path) -> None:
+        """Pasting over REPLACE_ME usually deletes the KEY= too, leaving a bare
+        credential the parser silently skips."""
+        path = self._write(tmp_path, "JIRA_EMAIL=a@b.com\nATATTsomeverylongtokenvalue\n")
+        problems = env_file_problems(path, environ={})
+        assert len(problems) == 1
+        assert "line 2" in problems[0]
+        assert "KEY=" in problems[0]
+
+    def test_the_bare_line_message_says_the_value_is_not_reaching_jiralens(
+        self, tmp_path: Path
+    ) -> None:
+        path = self._write(tmp_path, "sometoken\n")
+        assert "not reaching JiraLens" in env_file_problems(path, environ={})[0]
+
+    def test_comments_and_blanks_are_not_flagged(self, tmp_path: Path) -> None:
+        path = self._write(tmp_path, "# just a comment\n\n   \n# another\n")
+        assert env_file_problems(path, environ={}) == []
+
+    def test_a_leftover_placeholder_is_flagged(self, tmp_path: Path) -> None:
+        path = self._write(tmp_path, "JIRA_API_TOKEN=REPLACE_ME\n")
+        problems = env_file_problems(path, environ={})
+        assert any("placeholder" in p and "JIRA_API_TOKEN" in p for p in problems)
+
+    def test_a_shadowing_environment_variable_is_flagged(self, tmp_path: Path) -> None:
+        """Environment wins over .env, so a stale export makes edits do nothing."""
+        path = self._write(tmp_path, "JIRA_API_TOKEN=from-the-file\n")
+        problems = env_file_problems(path, environ={"JIRA_API_TOKEN": "stale-export"})
+        assert len(problems) == 1
+        assert "overrides" in problems[0]
+        assert "new terminal" in problems[0]
+
+    def test_a_matching_environment_variable_is_not_flagged(self, tmp_path: Path) -> None:
+        path = self._write(tmp_path, "JIRA_API_TOKEN=same\n")
+        assert env_file_problems(path, environ={"JIRA_API_TOKEN": "same"}) == []
+
+    def test_unrelated_environment_variables_are_ignored(self, tmp_path: Path) -> None:
+        path = self._write(tmp_path, "EDITOR=vim\n")
+        assert env_file_problems(path, environ={"EDITOR": "nano"}) == []
+
+    def test_no_secret_value_appears_in_any_message(self, tmp_path: Path) -> None:
+        secret = "super-secret-token-value-123456"
+        path = self._write(tmp_path, f"JIRA_API_TOKEN={secret}\n{secret}\n")
+        for problem in env_file_problems(path, environ={"JIRA_API_TOKEN": "other"}):
+            assert secret not in problem
+
+    def test_several_problems_are_all_reported(self, tmp_path: Path) -> None:
+        path = self._write(
+            tmp_path, "JIRA_API_TOKEN=REPLACE_ME\nbare-line-here\nJIRA_EMAIL=a@b.com\n"
+        )
+        problems = env_file_problems(path, environ={"JIRA_EMAIL": "different@b.com"})
+        assert len(problems) == 3
