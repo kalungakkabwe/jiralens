@@ -151,7 +151,12 @@ def connection_test() -> None:
     table = Table(show_header=False, title="Connection successful", title_justify="left")
     table.add_column("Field")
     table.add_column("Value")
-    table.add_row("Site", info.server_title or settings.site_url or "—")
+    # serverTitle is usually the generic "Jira", which identifies nothing. The site
+    # URL is what tells you which instance you just authenticated against.
+    site_label = settings.site_url or "—"
+    if info.server_title and info.server_title.strip().lower() != "jira":
+        site_label = f"{info.server_title} ({site_label})"
+    table.add_row("Site", site_label)
     table.add_row("API base", settings.api_base_url or "—")
     token_kind = (
         "service account"

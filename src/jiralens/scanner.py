@@ -164,6 +164,10 @@ def run_scan(
             )
             logger.warning("changelog retrieval failed: %s", exc)
 
+    # Anything the source needs disclosed — a parse mismatch, unmatched records.
+    # Folded in here so a source-level problem cannot stay invisible in the result.
+    warnings.extend(getattr(source, "warnings", ()))
+
     if changelog_available and issues:
         without_history = [i.key for i in issues if not histories.get(i.key)]
         if without_history:

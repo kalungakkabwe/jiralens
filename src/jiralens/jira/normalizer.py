@@ -12,7 +12,7 @@ Two notes that matter at build time:
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping, Sequence
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 from typing import Any, get_args
 
 from jiralens.exceptions import JiraApiError
@@ -147,26 +147,63 @@ def normalize_issues(raws: Iterable[Mapping[str, Any]], base_url: str) -> list[I
     return [normalize_issue(raw, base_url) for raw in raws]
 
 
-def normalize_status_changes(entries: Sequence[Mapping[str, Any]]) -> list[StatusChange]:
+def parse_changelog_timestamp(value: Any) -> datetime | None:
+    """Parse a changelog ``created`` value, or return None if it cannot be read.
+
+    Atlassian is not consistent here, and the difference is invisible until you call
+    the real API: ``POST /rest/api/3/changelog/bulkfetch`` returns **epoch
+    milliseconds** (``1795256864259``), while the issue ``changelog`` expand returns an
+    ISO-8601 string. Accepting only the documented string form silently discarded
+    every live history.
+    """
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int | float):
+        return datetime.fromtimestamp(value / 1000, tz=UTC)
+    if isinstance(value, str):
+        text = value.strip()
+        if not text:
+            return None
+        if text.isdigit():  # epoch milliseconds that arrived as a string
+            return datetime.fromtimestamp(int(text) / 1000, tz=UTC)
+        try:
+            parsed = datetime.fromisoformat(text)
+        except ValueError:
+            return None
+        # A naive timestamp is refused rather than assumed to be UTC: guessing wrong
+        # shifts every status age by the site's offset.
+        return parsed if parsed.tzinfo is not None else None
+    return None
+
+
+def normalize_status_changes(
+    entries: Sequence[Mapping[str, Any]],
+    *,
+    problems: list[str] | None = None,
+) -> list[StatusChange]:
     """Extract status transitions from changelog entries, oldest first.
 
-    Each changelog entry carries an ``items`` array; only the status items are kept.
-    Entries without a parseable timestamp are skipped rather than failing the scan —
-    a malformed history should not abort an audit of 500 issues.
+    Each entry carries an ``items`` array; only status items are kept. An entry that
+    cannot be read is skipped rather than failing the scan — one malformed history
+    should not abort an audit of 500 issues — but every skip is recorded in
+    ``problems`` when a sink is given. Skipping silently is how a 100% parse failure
+    once looked exactly like "these issues never transitioned".
     """
     changes: list[StatusChange] = []
+
+    def note(message: str) -> None:
+        if problems is not None:
+            problems.append(message)
+
     for entry in entries:
-        created = entry.get("created")
-        if not isinstance(created, str):
-            continue
-        try:
-            changed_at = datetime.fromisoformat(created)
-        except ValueError:
-            continue
-        if changed_at.tzinfo is None:
+        entry_id = entry.get("id", "?")
+        changed_at = parse_changelog_timestamp(entry.get("created"))
+        if changed_at is None:
+            note(f"changelog entry {entry_id}: unreadable 'created' value")
             continue
         items = entry.get("items")
-        if not isinstance(items, Sequence):
+        if not isinstance(items, Sequence) or isinstance(items, str | bytes):
+            note(f"changelog entry {entry_id}: 'items' is missing or not a list")
             continue
         for item in items:
             if not isinstance(item, Mapping):
@@ -186,6 +223,7 @@ def normalize_status_changes(entries: Sequence[Mapping[str, Any]]) -> list[Statu
 
 __all__ = [
     "ISSUE_FIELDS",
+    "parse_changelog_timestamp",
     "normalize_issue",
     "normalize_issues",
     "normalize_status_changes",

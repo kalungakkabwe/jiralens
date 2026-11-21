@@ -14,6 +14,7 @@ from jiralens.jira.normalizer import (
     normalize_issue,
     normalize_issues,
     normalize_status_changes,
+    parse_changelog_timestamp,
 )
 from tests.conftest import BASE_URL
 
@@ -245,3 +246,117 @@ class TestStatusChangeExtraction:
         assert (
             normalize_status_changes([{"id": "1", "created": "2026-10-02T09:00:00.000+0200"}]) == []
         )
+
+
+# ---------------------------------------------------------------------------
+# Changelog timestamps
+# ---------------------------------------------------------------------------
+
+#: Copied verbatim from a real POST /rest/api/3/changelog/bulkfetch response.
+#: The documented examples show an ISO-8601 'created'; the live endpoint returns
+#: epoch milliseconds. Fixtures written from the docs agreed with the bug.
+LIVE_BULKFETCH_ENTRY: dict[str, Any] = {
+    "id": "10310",
+    "author": {"accountId": "5fd89da3208dbf0107cf4916", "displayName": "Kay Kalunga Kabwe"},
+    "created": 1795256864259,
+    "items": [
+        {
+            "field": "status",
+            "fieldtype": "jira",
+            "fieldId": "status",
+            "from": "10038",
+            "fromString": "Waiting for support",
+            "to": "3",
+            "toString": "In Progress",
+        }
+    ],
+}
+
+
+class TestChangelogTimestampParsing:
+    def test_epoch_milliseconds_as_an_integer(self) -> None:
+        """What bulkfetch actually sends."""
+        parsed = parse_changelog_timestamp(1795256864259)
+        assert parsed is not None
+        assert parsed.tzinfo is not None
+        assert parsed.year == 2026
+        assert parsed.month == 11
+        assert parsed.day == 21
+
+    def test_epoch_milliseconds_as_a_string(self) -> None:
+        assert parse_changelog_timestamp("1795256864259") == parse_changelog_timestamp(
+            1795256864259
+        )
+
+    def test_an_iso_string_still_works(self) -> None:
+        """The changelog expand on other endpoints returns this form."""
+        parsed = parse_changelog_timestamp("2026-10-01T09:00:00.000+0200")
+        assert parsed is not None
+        assert parsed.utcoffset() is not None
+
+    def test_a_naive_iso_string_is_refused_not_assumed_utc(self) -> None:
+        """Guessing shifts every status age by the site's offset."""
+        assert parse_changelog_timestamp("2026-10-01T09:00:00.000") is None
+
+    @pytest.mark.parametrize("junk", [None, "", "   ", "last tuesday", True, False, [], {}])
+    def test_unreadable_values_return_none(self, junk: Any) -> None:
+        assert parse_changelog_timestamp(junk) is None
+
+
+class TestLiveBulkfetchShape:
+    """Regression tests for the bug the first live scan exposed."""
+
+    def test_the_real_payload_yields_a_transition(self) -> None:
+        changes = normalize_status_changes([LIVE_BULKFETCH_ENTRY])
+        assert len(changes) == 1
+        assert changes[0].from_status == "Waiting for support"
+        assert changes[0].to_status == "In Progress"
+        assert changes[0].changed_at.tzinfo is not None
+
+    def test_it_reports_no_problems(self) -> None:
+        problems: list[str] = []
+        normalize_status_changes([LIVE_BULKFETCH_ENTRY], problems=problems)
+        assert problems == []
+
+    def test_the_extra_author_block_is_ignored_safely(self) -> None:
+        assert normalize_status_changes([LIVE_BULKFETCH_ENTRY])[0].to_status == "In Progress"
+
+
+class TestSkipsAreRecordedNotSilent:
+    """A silent skip is indistinguishable from 'these issues never moved' — which is
+    exactly how a 100% parse failure hid behind a plausible-looking result."""
+
+    def test_an_unreadable_timestamp_is_recorded(self) -> None:
+        problems: list[str] = []
+        entries = [{"id": "99", "created": "nonsense", "items": []}]
+        normalize_status_changes(entries, problems=problems)
+        assert len(problems) == 1
+        assert "99" in problems[0]
+        assert "created" in problems[0]
+
+    def test_missing_items_are_recorded(self) -> None:
+        problems: list[str] = []
+        normalize_status_changes([{"id": "7", "created": 1795256864259}], problems=problems)
+        assert len(problems) == 1
+        assert "items" in problems[0]
+
+    def test_a_good_entry_alongside_a_bad_one_still_parses(self) -> None:
+        problems: list[str] = []
+        changes = normalize_status_changes(
+            [{"id": "1", "created": "nonsense"}, LIVE_BULKFETCH_ENTRY], problems=problems
+        )
+        assert len(changes) == 1
+        assert len(problems) == 1
+
+    def test_the_sink_is_optional(self) -> None:
+        assert normalize_status_changes([{"id": "1", "created": "nonsense"}]) == []
+
+    def test_mixed_timestamp_formats_sort_together(self) -> None:
+        """Both forms can appear if a site is mid-migration; ordering must hold."""
+        older = {
+            "id": "a",
+            "created": "2026-01-01T00:00:00.000+0000",
+            "items": [{"field": "status", "toString": "A"}],
+        }
+        changes = normalize_status_changes([LIVE_BULKFETCH_ENTRY, older])
+        assert [c.to_status for c in changes] == ["A", "In Progress"]

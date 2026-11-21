@@ -399,3 +399,116 @@ class TestFullLiveScan:
             text = path.read_text(encoding="utf-8")
             assert TOKEN not in text
             assert "Authorization" not in text
+
+
+class TestLivePayloadRegression:
+    """The first live scan returned a changelog that parsed to nothing, and the
+    result was indistinguishable from an untouched backlog. These lock that shut."""
+
+    @staticmethod
+    def _live_changelog(n: int) -> dict[str, Any]:
+        """A real bulkfetch record: 'created' is epoch milliseconds, not ISO."""
+        return {
+            "issueId": str(10000 + n),
+            "changeHistories": [
+                {
+                    "id": "10310",
+                    "author": {"accountId": "acc-1", "displayName": "Kay"},
+                    "created": 1795256864259,
+                    "items": [
+                        {
+                            "field": "status",
+                            "fieldtype": "jira",
+                            "fieldId": "status",
+                            "fromString": "Waiting for support",
+                            "toString": "In Progress",
+                        }
+                    ],
+                }
+            ],
+        }
+
+    @respx.mock
+    def test_an_epoch_millisecond_history_reaches_the_engine(
+        self, source: JiraIssueSource, config: ScanConfig
+    ) -> None:
+        mock_project()
+        respx.post(f"{SITE}/rest/api/3/search/jql").mock(
+            return_value=httpx.Response(200, json={"issues": [issue(1)]})
+        )
+        respx.post(f"{SITE}/rest/api/3/changelog/bulkfetch").mock(
+            return_value=httpx.Response(200, json={"issueChangeLogs": [self._live_changelog(1)]})
+        )
+        source.fetch_issues(config)
+        histories = source.fetch_status_history(["ITS-1"])
+        assert "ITS-1" in histories, "the live payload shape must not be dropped"
+        assert histories["ITS-1"][-1].to_status == "In Progress"
+        assert source.warnings == []
+
+    @respx.mock
+    def test_records_that_all_fail_to_parse_are_disclosed_loudly(
+        self, source: JiraIssueSource, config: ScanConfig
+    ) -> None:
+        """Jira handing back histories while the engine sees none must never pass
+        for 'these issues never transitioned'."""
+        mock_project()
+        respx.post(f"{SITE}/rest/api/3/search/jql").mock(
+            return_value=httpx.Response(200, json={"issues": [issue(1)]})
+        )
+        respx.post(f"{SITE}/rest/api/3/changelog/bulkfetch").mock(
+            return_value=httpx.Response(
+                200,
+                json={
+                    "issueChangeLogs": [
+                        {
+                            "issueId": "10001",
+                            "changeHistories": [{"id": "1", "created": "nonsense"}],
+                        }
+                    ]
+                },
+            )
+        )
+        source.fetch_issues(config)
+        assert source.fetch_status_history(["ITS-1"]) == {}
+        joined = " ".join(source.warnings)
+        assert "could not be read" in joined
+        assert "creation date" in joined
+
+    @respx.mock
+    def test_that_disclosure_reaches_the_scan_result(self, client: JiraClient) -> None:
+        mock_project()
+        respx.post(f"{SITE}/rest/api/3/search/jql").mock(
+            return_value=httpx.Response(200, json={"issues": [issue(1)]})
+        )
+        respx.post(f"{SITE}/rest/api/3/changelog/bulkfetch").mock(
+            return_value=httpx.Response(
+                200,
+                json={
+                    "issueChangeLogs": [
+                        {
+                            "issueId": "10001",
+                            "changeHistories": [{"id": "1", "created": "nonsense"}],
+                        }
+                    ]
+                },
+            )
+        )
+        result = run_scan(JiraIssueSource(client), ScanConfig(project_key="ITS"), now=FROZEN_NOW)
+        joined = " ".join(result.warnings)
+        assert "could not be read" in joined
+        assert "response shape has changed" in joined
+
+    @respx.mock
+    def test_a_history_for_an_issue_outside_the_search_is_disclosed(
+        self, source: JiraIssueSource, config: ScanConfig
+    ) -> None:
+        mock_project()
+        respx.post(f"{SITE}/rest/api/3/search/jql").mock(
+            return_value=httpx.Response(200, json={"issues": [issue(1)]})
+        )
+        respx.post(f"{SITE}/rest/api/3/changelog/bulkfetch").mock(
+            return_value=httpx.Response(200, json={"issueChangeLogs": [self._live_changelog(99)]})
+        )
+        source.fetch_issues(config)
+        source.fetch_status_history(["ITS-1"])
+        assert any("did not return" in w for w in source.warnings)

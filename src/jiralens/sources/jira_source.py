@@ -28,6 +28,9 @@ class JiraIssueSource:
         #: Issue id to key, captured during fetch_issues. The changelog endpoint keys
         #: its response by id, so this is how histories get matched back to issues.
         self._id_to_key: dict[str, str] = {}
+        #: Anything the scan should disclose. ``run_scan`` folds these into
+        #: ``ScanResult.warnings`` so a parsing mismatch cannot pass for "no history".
+        self.warnings: list[str] = []
 
     def fetch_issues(self, config: ScanConfig) -> list[IssueRecord]:
         if self._validate_project and config.jql is None:
@@ -55,17 +58,59 @@ class JiraIssueSource:
             return {}
 
         by_id = self._client.get_status_changelogs(ids)
+        problems: list[str] = []
+        unmatched = 0
         out: dict[str, list[StatusChange]] = {}
         for issue_id, entries in by_id.items():
             key = self._id_to_key.get(issue_id)
             if key is None:
+                unmatched += 1
                 # A history for an issue the search did not return. Ignore it rather
                 # than inventing an issue the audit never saw.
                 continue
-            changes = normalize_status_changes(entries)
+            changes = normalize_status_changes(entries, problems=problems)
             if changes:
                 out[key] = changes
+
+        self._report(by_id, out, problems, unmatched)
         return out
+
+    def _report(
+        self,
+        by_id: dict[str, list[dict[str, object]]],
+        out: dict[str, list[StatusChange]],
+        problems: list[str],
+        unmatched: int,
+    ) -> None:
+        """Disclose anything that would otherwise pass for "these issues never moved".
+
+        A silent parse failure is indistinguishable from an untouched backlog in the
+        output, which is precisely how a 100% failure went unnoticed until the first
+        live run. Jira handing back histories and the engine seeing none is now stated.
+        """
+        if problems:
+            for problem in problems[:5]:
+                logger.warning("%s", problem)
+            self.warnings.append(
+                f"{len(problems)} changelog entr"
+                f"{'y' if len(problems) == 1 else 'ies'} could not be read, so the "
+                "affected issues fall back to their creation date for status age."
+            )
+
+        if by_id and not out:
+            self.warnings.append(
+                f"Jira returned changelog records for {len(by_id)} issue(s) but none "
+                "yielded a usable status transition. Treat every current-status age "
+                "in this scan as measured from the creation date, not a real "
+                "transition — this usually means the changelog response shape has "
+                "changed."
+            )
+
+        if unmatched:
+            self.warnings.append(
+                f"{unmatched} changelog record(s) referred to issues the search did "
+                "not return, and were ignored."
+            )
 
 
 __all__ = ["JiraIssueSource"]
