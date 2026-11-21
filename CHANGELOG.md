@@ -6,6 +6,38 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+### Found by the first live scan
+
+Everything below this heading was invisible to 632 passing tests, because the
+fixtures were written from Atlassian's documented examples and the documentation is
+wrong or incomplete in each case. Only a call to a real site found them.
+
+- **`changelog/bulkfetch` returns `created` as epoch milliseconds**, while the issue
+  `changelog` expand returns ISO-8601. The normaliser accepted only the string form,
+  so **100% of live status histories were silently discarded** and every issue fell
+  back to its creation date for status age. The output stayed plausible throughout: an
+  issue transitioned minutes earlier reported "remained in 'In Progress' for 15
+  calendar days since it was created". Fixed; regression tests use a verbatim live
+  payload rather than the documented example.
+- **Silent skips are now recorded.** A dropped changelog entry and an issue that never
+  moved produced identical output, which is what let a total parse failure pass for an
+  untouched backlog. Skips name the entry and reason, the source states plainly when
+  Jira returned records but none yielded a transition, and `run_scan` folds source
+  warnings into `ScanResult.warnings` so a source-level problem cannot stay invisible.
+- **Service account tokens** (`ATST` prefix) authenticate with `Authorization: Bearer`,
+  not `email:token` basic auth, and must use the `api.atlassian.com` gateway. Sent as
+  basic auth they return 401, which reads exactly like a mistyped credential. The
+  scheme is now resolved from the token, `JIRA_EMAIL` is not required under bearer, and
+  an `ATST` token without `JIRA_CLOUD_ID` is refused up front rather than failing three
+  calls later.
+- **`.env` problems that produce misleading errors** are reported before any request:
+  a line with no `=` (pasting over a placeholder usually deletes the `KEY=` with it,
+  so the value never reaches the tool), a placeholder left in place, and any
+  environment variable shadowing the file — environment beats `.env`, so a stale
+  `export` makes edits inert while the error points at the file you just corrected.
+- `connection-test` showed `Site: Jira`, Atlassian's generic `serverTitle`, which
+  identifies nothing. It now shows the site URL, plus the token type and auth scheme.
+
 ### Added
 
 - **Phase 0** — packaging, validated configuration, exception hierarchy, logging with
