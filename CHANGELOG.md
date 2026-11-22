@@ -166,6 +166,18 @@ wrong or incomplete in each case. Only a call to a real site found them.
 - Every scan states the permission caveat, so no report implies more coverage than the
   authenticated account actually has.
 
+- **Test-data seeder.** `scripts/seed_test_project.py` populates a scratch project
+  with ~150 varied issues — weighted due dates (past, today, future, none), mixed
+  priorities, roughly half unassigned, and genuine transitions on a subset — so the
+  checks that have never flagged anything against live data finally face some. It is
+  the only file here that writes to Jira, lives outside the package, and
+  `tests/test_seed_isolation.py` asserts it never imports the read-only client and
+  that no PUT, PATCH or DELETE literal appears inside `jiralens`. Two seeded
+  summaries are adversarial by design: a spreadsheet formula and an HTML payload,
+  which exercise the CSV and HTML escaping against data Jira actually returned.
+  Jira will not let any API backdate `updated`, so `stale` can only be exercised
+  here with a zero threshold — the code path, not the aged-data behaviour.
+
 - **Documentation and repository bootstrap.** `docs/architecture.md` carries the
   layer diagram, a live scan end to end, the read-only chokepoint and the three
   authentication paths. `scripts/bootstrap_github.sh` creates the v0.1.0 milestone,
