@@ -166,6 +166,11 @@ wrong or incomplete in each case. Only a call to a real site found them.
 - Every scan states the permission caveat, so no report implies more coverage than the
   authenticated account actually has.
 
+- **Documentation and repository bootstrap.** `docs/architecture.md` carries the
+  layer diagram, a live scan end to end, the read-only chokepoint and the three
+  authentication paths. `scripts/bootstrap_github.sh` creates the v0.1.0 milestone,
+  the label set and the sixteen-issue backlog in one idempotent run.
+
 ### Remaining before v0.1.0
 
 - Branch ruleset, GitHub issue backlog, and the release itself.

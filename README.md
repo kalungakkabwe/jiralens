@@ -172,6 +172,8 @@ explicitly.
 
 ## Design notes
 
+Diagrams of the layers, a live scan end to end, and the read-only chokepoint are in [`docs/architecture.md`](docs/architecture.md).
+
 Two decisions shape the codebase:
 
 **The clock is injected.** No check ever calls `datetime.now()`. The current time
