@@ -57,9 +57,7 @@ def test_seed_script_does_not_import_the_read_only_client(seed_tree: ast.AST) ->
 
 def test_seed_script_names_no_client_symbol(seed_tree: ast.AST) -> None:
     """Identifiers only — the docstring names JiraClient precisely to disclaim it."""
-    used = {
-        node.id for node in ast.walk(seed_tree) if isinstance(node, ast.Name)
-    } | {
+    used = {node.id for node in ast.walk(seed_tree) if isinstance(node, ast.Name)} | {
         node.attr for node in ast.walk(seed_tree) if isinstance(node, ast.Attribute)
     }
     forbidden = {"JiraClient", "READ_ONLY_ENDPOINTS", "ReadOnlyViolationError"} & used
@@ -83,6 +81,5 @@ def test_package_contains_no_write_verbs() -> None:
                     offenders.append(f"{path.name}:{node.lineno} {node.value!r}")
 
     assert not offenders, (
-        "write verbs appear as literals inside the jiralens package: "
-        + ", ".join(offenders)
+        "write verbs appear as literals inside the jiralens package: " + ", ".join(offenders)
     )

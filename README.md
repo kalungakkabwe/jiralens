@@ -56,7 +56,11 @@ See `CHANGELOG.md` for what each phase pinned and why.
 streamlit run streamlit_app.py
 ```
 
-Demo mode needs no credentials and runs the same audit engine a live scan would.
+Demo mode needs no credentials and runs the same audit engine a live scan would,
+which also means it can be hosted publicly — see
+[`docs/deploy-demo.md`](docs/deploy-demo.md). Setting
+`JIRALENS_LIVE_JIRA_DISABLED=true` removes the Live option from the sidebar, so a
+public deployment offers no door that cannot open.
 
 ![Overview](docs/screenshots/02-overview.png)
 

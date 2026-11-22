@@ -242,6 +242,19 @@ class TestHonestSkipping:
 
 
 class TestLiveMode:
+    def test_live_mode_is_hidden_when_the_deployment_disables_it(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """The public demo must not offer a door that cannot open."""
+        monkeypatch.setenv("JIRALENS_LIVE_JIRA_DISABLED", "true")
+        app = _app().run()
+        assert app.radio[0].options == ["Demo (synthetic data)"]
+        assert any("holds no credentials" in c.value for c in app.caption)
+
+    def test_live_mode_is_offered_by_default(self) -> None:
+        app = _app().run()
+        assert "Live Jira" in app.radio[0].options
+
     def test_live_mode_without_credentials_names_the_missing_variables(self) -> None:
         at = _app()
         at.run()

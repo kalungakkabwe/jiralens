@@ -137,9 +137,7 @@ def api(client: httpx.Client, method: str, path: str, **kwargs: Any) -> Any:
     """
     response = client.request(method, path, **kwargs)
     if response.status_code >= 400:
-        raise SystemExit(
-            f"{method} {path} -> {response.status_code}\n{response.text[:1500]}"
-        )
+        raise SystemExit(f"{method} {path} -> {response.status_code}\n{response.text[:1500]}")
     if not response.content:
         return None
     return response.json()
@@ -228,9 +226,7 @@ def build_plan(
             fields["duedate"] = due.date().isoformat()
 
         if "priority" in available:
-            fields["priority"] = {
-                "name": rng.choices(priorities, weights=(8, 18, 45, 20, 9))[0]
-            }
+            fields["priority"] = {"name": rng.choices(priorities, weights=(8, 18, 45, 20, 9))[0]}
 
         if "labels" in available:
             fields["labels"] = ["seeded"] + rng.sample(
@@ -291,8 +287,10 @@ def create_issues(client: httpx.Client, plan: Plan) -> list[str]:
         body = api(client, "POST", "/rest/api/3/issue/bulk", json={"issueUpdates": chunk})
         created.extend(issue["key"] for issue in body.get("issues", []))
         for err in body.get("errors", []):
-            print(f"    error on element {err.get('failedElementNumber')}: "
-                  f"{err.get('elementErrors', {}).get('errors')}")
+            print(
+                f"    error on element {err.get('failedElementNumber')}: "
+                f"{err.get('elementErrors', {}).get('errors')}"
+            )
         print(f"    created {len(created)}/{len(plan.issues)}")
         time.sleep(1.0)  # courtesy pause; this is someone's real site
     return created
@@ -311,7 +309,8 @@ def apply_transitions(client: httpx.Client, keys: list[str], indices: list[int])
         key = keys[index]
         available = api(client, "GET", f"/rest/api/3/issue/{key}/transitions")
         options = [
-            t for t in available.get("transitions", [])
+            t
+            for t in available.get("transitions", [])
             if t.get("to", {}).get("statusCategory", {}).get("key") != "done"
         ] or available.get("transitions", [])
         if not options:

@@ -102,7 +102,19 @@ with st.sidebar:
     st.title("JiraLens")
     st.caption(f"Read-only Jira auditor · v{__version__}")
 
-    mode = st.radio("Mode", [DEMO, LIVE], key="mode", horizontal=False)
+    # A public deployment holds no credentials, so offering Live mode there would
+    # only ever produce a configuration error. JIRALENS_LIVE_JIRA_DISABLED removes
+    # the option entirely rather than letting a visitor walk into a dead end.
+    live_available = not settings.jiralens_live_jira_disabled
+    mode = st.radio(
+        "Mode", [DEMO, LIVE] if live_available else [DEMO], key="mode", horizontal=False
+    )
+    if not live_available:
+        st.caption(
+            "Live mode is disabled on this deployment. This runs the real audit "
+            "engine against a synthetic dataset and holds no credentials for any "
+            "Jira site."
+        )
 
     if mode == DEMO:
         project = DEMO_PROJECT_KEY

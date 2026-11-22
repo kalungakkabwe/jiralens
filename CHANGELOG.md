@@ -166,6 +166,14 @@ wrong or incomplete in each case. Only a call to a real site found them.
 - Every scan states the permission caveat, so no report implies more coverage than the
   authenticated account actually has.
 
+- **Public demo deployment.** `docs/deploy-demo.md` and a committed
+  `.streamlit/config.toml` cover hosting the dashboard on Streamlit Community Cloud.
+  `JIRALENS_LIVE_JIRA_DISABLED=true` now removes Live mode from the sidebar rather
+  than leaving a visitor to select a mode that can only raise a configuration error;
+  a test asserts the radio offers Demo alone when it is set. The deployment holds no
+  credentials and the dashboard has never accepted one through the UI, so the only
+  thing on display is the synthetic dataset.
+
 - **Test-data seeder.** `scripts/seed_test_project.py` populates a scratch project
   with ~150 varied issues — weighted due dates (past, today, future, none), mixed
   priorities, roughly half unassigned, and genuine transitions on a subset — so the

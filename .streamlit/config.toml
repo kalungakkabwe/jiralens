@@ -1,0 +1,27 @@
+# Streamlit configuration, committed so a deployment looks the same as local.
+#
+# Secrets never belong here. Streamlit reads them from .streamlit/secrets.toml,
+# which is gitignored, and on Streamlit Community Cloud from the app's own
+# Secrets panel. The public demo needs none: it runs on synthetic data.
+
+[theme]
+base = "light"
+primaryColor = "#0052CC"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F4F5F7"
+textColor = "#172B4D"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false
+
+[client]
+# Visitors to a public demo have no use for the developer menu, and "Rerun" or
+# "Clear cache" from a stranger is only ever confusing.
+toolbarMode = "viewer"
+showErrorDetails = false
+
+[server]
+# A scan of the synthetic dataset finishes in well under a second, so there is no
+# reason to accept large uploads or hold connections open.
+maxUploadSize = 1
