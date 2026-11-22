@@ -31,27 +31,36 @@ REPO="${REPO:-$(gh repo view --json nameWithOwner -q .nameWithOwner)}"
 echo "Repository: $REPO"
 [ -n "$DRY_RUN" ] && echo "(dry run — nothing will be created)"
 
+# Dry-run output goes to stderr deliberately. Every call site redirects stdout to
+# /dev/null to suppress gh's JSON; printing the preview on stdout would send it
+# there too, and a dry run indistinguishable from a live one is worse than none.
 run() {
   if [ -n "$DRY_RUN" ]; then
-    printf '  would run:'; printf ' %q' "$@"; printf '\n'
+    { printf '  would run:'; printf ' %q' "$@"; printf '\n'; } >&2
   else
     "$@"
   fi
 }
+
+if [ -n "$DRY_RUN" ]; then
+  DID_CREATE="would create"; DID_UPDATE="would update"; DID_EXIST="exists, would skip"
+else
+  DID_CREATE="created"; DID_UPDATE="updated"; DID_EXIST="skipped (exists)"
+fi
 
 # -- milestone ----------------------------------------------------------------
 # No `gh milestone` command exists; the REST API is the supported route.
 echo
 echo "Milestone"
 if gh api "repos/$REPO/milestones?state=all" -q '.[].title' | grep -qx "$MILESTONE"; then
-  echo "  $MILESTONE already exists"
+  echo "  $MILESTONE $DID_EXIST"
 else
   run gh api "repos/$REPO/milestones" \
     -f title="$MILESTONE" \
     -f state="open" \
     -f description="First tagged release: validated against a real site, CI green, branch protection on." \
     >/dev/null
-  echo "  created $MILESTONE"
+  echo "  $DID_CREATE $MILESTONE"
 fi
 
 # -- labels -------------------------------------------------------------------
@@ -60,10 +69,10 @@ echo "Labels"
 label() {   # label <name> <colour> <description>
   if gh label list --repo "$REPO" --limit 200 --json name -q '.[].name' | grep -qx "$1"; then
     run gh label edit "$1" --repo "$REPO" --color "$2" --description "$3" >/dev/null
-    echo "  updated $1"
+    echo "  $DID_UPDATE $1"
   else
     run gh label create "$1" --repo "$REPO" --color "$2" --description "$3" >/dev/null
-    echo "  created $1"
+    echo "  $DID_CREATE $1"
   fi
 }
 
@@ -94,7 +103,7 @@ existing="$(gh issue list --repo "$REPO" --state all --limit 500 --json title -q
 
 issue() {   # issue <title> <labels-csv> <milestone-or-empty> <body>
   if printf '%s\n' "$existing" | grep -qxF "$1"; then
-    echo "  skipped (exists): $1"
+    echo "  $DID_EXIST: $1"
     return
   fi
   if [ -n "$3" ]; then
@@ -102,7 +111,7 @@ issue() {   # issue <title> <labels-csv> <milestone-or-empty> <body>
   else
     run gh issue create --repo "$REPO" --title "$1" --label "$2" --body "$4" >/dev/null
   fi
-  echo "  created: $1"
+  echo "  $DID_CREATE: $1"
 }
 
 # --- release blockers --------------------------------------------------------
